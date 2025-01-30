@@ -3,10 +3,7 @@
     "languages": [{
         "id": "aurora",
         "grammar": "src/language/aurora.langium",
-        "fileExtensions": [".aurora"],
-        "textMate": {
-            "out": "syntaxes/aurora.tmLanguage.json"
-        }
+        "fileExtensions": [".aurora"]
     }],
     "out": "src/language/generated"
 }
