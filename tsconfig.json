@@ -17,7 +17,8 @@
         "forceConsistentCasingInFileNames": true,
         "rootDir": ".",
         "noEmit": true,
-        "declaration": true
+        "declaration": true,
+        "allowSyntheticDefaultImports": true
     },
     "include": [
         "src/**/*.ts",

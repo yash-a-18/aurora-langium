@@ -14,8 +14,9 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const packagePath = path.resolve(__dirname, '..', '..', 'package.json');
 const packageContent = await fs.readFile(packagePath, 'utf-8');
 
-export const getAuroraServices = () => {
-    return createAuroraServices(NodeFileSystem).Aurora;
+export const getAuroraServices = async () => {
+    const services = await Promise.resolve(createAuroraServices(NodeFileSystem));
+    return services;
 };
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
