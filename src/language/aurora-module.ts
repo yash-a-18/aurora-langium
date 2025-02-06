@@ -2,6 +2,7 @@ import { type Module, inject } from 'langium';
 import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices } from 'langium/lsp';
 import { AuroraGeneratedModule, AuroraGeneratedSharedModule } from './generated/module.js';
 import { AuroraValidator, registerValidationChecks } from './aurora-validator.js';
+import { AuroraScopeComputation } from './aurora-scope.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -26,6 +27,9 @@ export type AuroraServices = LangiumServices & AuroraAddedServices
 export const AuroraModule: Module<AuroraServices, PartialLangiumServices & AuroraAddedServices> = {
     validation: {
         AuroraValidator: () => new AuroraValidator()
+    },
+    references: {
+        ScopeComputation: (services) => new AuroraScopeComputation(services),
     }
 };
 
