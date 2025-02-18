@@ -4,7 +4,7 @@ import { AuroraGeneratedModule, AuroraGeneratedSharedModule } from './generated/
 import { AuroraValidator, registerValidationChecks } from './aurora-validator.js';
 import { AuroraScopeComputation } from './aurora-scope.js';
 import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
-import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule } from 'langium-sprotty';
+import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -64,6 +64,7 @@ export function createAuroraServices(context: DefaultSharedModuleContext): {
     );
     const Aurora = inject(
         createDefaultModule({ shared }),
+        SprottyDefaultModule,
         AuroraGeneratedModule,
         AuroraModule
     );
