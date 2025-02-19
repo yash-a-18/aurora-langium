@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2017",
-        "module": "Node16",
+        "module": "NodeNext",
         "lib": [
             "ESNext"
         ],
@@ -10,11 +10,11 @@
         "noUnusedLocals": true,
         "noImplicitReturns": true,
         "noImplicitOverride": true,
-        "moduleResolution": "Node16",
+        "moduleResolution": "NodeNext",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
+        "noEmit": false,
         "declaration": true,
         "allowSyntheticDefaultImports": true
     }

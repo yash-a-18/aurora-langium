@@ -5,8 +5,8 @@ import { Container } from 'inversify';
 import { configureModelElement } from 'sprotty';
 import { SprottyDiagramIdentifier } from 'sprotty-vscode-webview';
 import { SprottyLspEditStarter } from 'sprotty-vscode-webview/lib/lsp/editing/index.js';
-import { createStateDiagramContainer } from './di.config.js';
-import { PaletteButtonView } from './html-views.js';
+import { createStateDiagramContainer } from './di.config';
+import { PaletteButtonView } from './html-views';
 import { PaletteButton } from 'sprotty-vscode-webview/lib/lsp/editing/index.js';
 
 export class StatesSprottyStarter extends SprottyLspEditStarter {

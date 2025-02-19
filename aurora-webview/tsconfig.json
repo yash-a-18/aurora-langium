@@ -4,8 +4,10 @@
     "jsx": "react",
     "rootDir": "src",
     "outDir": "out",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "lib": [
       "ESNext"
     ],

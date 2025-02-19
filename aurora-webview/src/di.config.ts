@@ -10,14 +10,14 @@ import {
     hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule, SGraphImpl,
     SLabelImpl, SModelRootImpl
 } from 'sprotty';
-import { DarkTextLabelView } from './LabelViews.js'
+import { DarkTextLabelView } from './LabelViews'
 
 import { NarrativeDraftNodeView,
     NarrativeExclamationNodeView, NarrativeNodeView, NarrativeTaskCompletedNodeView,NarrativeTaskNodeView,
-    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView} from './NodeViews.js'
-import { CustomRouter } from './custom-edge-router.js';
-import { CreateTransitionPort, StatesEdge, StatesNode } from './model.js';
-import { PolylineArrowEdgeView, TriangleButtonView } from './views.js';
+    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView} from './NodeViews'
+import { CustomRouter } from './custom-edge-router';
+import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
+import { PolylineArrowEdgeView, TriangleButtonView } from './views';
 
 const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();

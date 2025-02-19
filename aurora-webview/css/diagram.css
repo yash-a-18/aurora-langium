@@ -1,0 +1,197 @@
+.sprotty-node {
+    fill: #774342
+}
+
+.sprotty-orphan-node {
+    fill: #ffffff;
+    stroke: #ff0400;
+    stroke-width: 5px
+}
+
+.sprotty-ic-node {
+    fill: #545454
+}
+
+.sprotty-logic-node {
+    fill: #ffffff
+}
+
+.sprotty-ngl-node {
+    fill: #515151
+}
+
+.sprotty-nl-node {
+    fill: #ffffff
+}
+
+.sprotty-nldraft-node {
+    fill: #ddab61
+}
+
+.sprotty-nlexclamation-node {
+    fill: #9c0909
+}
+
+.sprotty-nltaskcompleted-node {
+    fill: #89B345
+}
+
+.sprotty-nltask-node {
+    fill: #ad7fa8
+}
+
+.sprotty-oc-node {
+    fill: #d1d1d1
+}
+
+.sprotty-fhir-me-draft-node {
+    fill: #ddab61
+}
+
+.sprotty-fhir-me-exclamation-node {
+    fill: #9c0909
+}
+
+.sprotty-fhir-me-taskcompleted-node {
+    fill: #89B345
+}
+
+.sprotty-fhir-me-task-node {
+    fill: #ad7fa8
+}
+
+.sprotty-fhir-me-regular-node {
+    fill: #d1d1d1
+}
+.sprotty-fhir-me-draft-past-node {
+    fill: #ddab6150;
+}
+
+.sprotty-fhir-me-exclamation-past-node {
+    fill: #9c090950;
+}
+
+.sprotty-fhir-me-taskcompleted-past-node {
+    fill: #89B34550;
+}
+
+.sprotty-fhir-me-task-past-node {
+    fill: #ad7fa850;
+}
+
+.sprotty-fhir-me-regular-past-node {
+    fill: #d1d1d150;
+}
+
+
+.sprotty-ocselected-node {
+    fill: #ABD48F
+}
+
+.sprotty-node.selected {
+    stroke-width: 2;
+    stroke: var(--vscode-button-hover-background);
+}
+
+.sprotty-label {
+    fill: var(--vscode-button-foreground);
+    stroke-width: 0;
+}
+
+.sprotty-darktext-label {
+    fill: #000000;
+    stroke-width: 0;
+}
+
+.sprotty-button {
+    fill: var(--vscode-editorActiveLineNumber-foreground);
+}
+
+.sprotty-edge .sprotty-label {
+    fill: var(--vscode-editorActiveLineNumber-foreground);
+}
+
+.sprotty-edge {
+    fill:none;
+    stroke: var(--vscode-editorActiveLineNumber-foreground);
+    stroke-width: 2px;
+}
+
+.sprotty-orange-edge {
+    fill:none;
+    stroke: #C4772D;
+    stroke-width: 2px;
+}
+
+.sprotty-green-edge {
+    fill:none;
+    stroke: #799665;
+    stroke-width: 2px;
+}
+
+.sprotty-negative-edge {
+    fill:none;
+    stroke: #D44D37;
+    stroke-width: 2px;
+}
+
+.sprotty-edge-arrow {
+    fill:var(--vscode-editorActiveLineNumber-foreground);
+}
+
+.sprotty-negative-edge-arrow {
+    fill: #D44D37;
+}
+path.sprotty-edge.dashed {
+    stroke: #D44D37;
+    stroke-width: 4px;
+}
+
+
+.sprotty-green-edge-arrow {
+    fill: #174A09;
+}
+.sprotty-green-edge.dashed {
+    stroke: #799665;
+    stroke-width: 4px;
+}
+
+.sprotty-orange-edge-arrow {
+    fill: #C4772D;
+}
+.sprotty-orange-edge.dashed {
+    stroke: #C4772D;
+    stroke-width: 4px;
+}
+
+.sprotty-edge.dashed {
+    stroke: #D44D37;
+    stroke-width: 4px;
+}
+.sprotty-edge > .sprotty-routing-handle {
+    fill: var(--vscode-editor-selectionBackground);
+    stroke: none;
+    z-index: 1000;
+}
+
+.sprotty-edge > .sprotty-routing-handle[data-kind='line'] {
+    opacity: 0.35;
+}
+
+.sprotty-edge > .sprotty-routing-handle.selected {
+    fill: var(--vscode-editor-selectionHighlightBackground);
+}
+
+.sprotty-edge > .sprotty-routing-handle.mouseover {
+    stroke: var(--vscode-editor-symbolHighlightBackground);
+    stroke-width: 1;
+}
+
+.sprotty-edge.mouseover:not(.selected) {
+    stroke-width: 3px;
+}
+
+.sprotty-hidden {
+    width: 0px;
+    height: 0px;
+}
