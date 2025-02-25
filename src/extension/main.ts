@@ -1,14 +1,60 @@
 import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/node.js';
-import type * as vscode from 'vscode';
+import * as vscode from 'vscode';
+// import type * as vscode from 'vscode';
 import * as path from 'node:path';
-import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
+import { State, LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
+import { createFileUri, createWebviewHtml as doCreateWebviewHtml,
+    registerDefaultCommands, registerTextEditorSync
+ } from 'sprotty-vscode';
+import { LspSprottyViewProvider } from 'sprotty-vscode/lib/lsp/lsp-sprotty-view-provider.js';
+import { Messenger } from 'vscode-messenger';
 
 let client: LanguageClient;
+
+class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
+    protected createWebview(container: vscode.WebviewView): void {
+        const webview = container.webview;
+        const localResourceRoots = [createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram')];
+        webview.options = {
+            enableScripts: true,
+            localResourceRoots
+        };
+        const identifier = { clientId: 'states', diagramType: 'states', uri: 'states' };
+        webview.html = doCreateWebviewHtml(identifier, container, {
+            scriptUri: createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram', 'main.js'),
+            cssUri: createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram', 'main.css')
+        });
+    }
+}
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
     client = startLanguageClient(context);
+    // const extensionPath = context.extensionUri.fsPath;
+    // const localResourceRoots = [createFileUri(extensionPath, 'pack', 'diagram')];
+    // const createWebviewHtml = (identifier: SprottyDiagramIdentifier, container: WebviewContainer) => doCreateWebviewHtml(identifier, container, {
+    //     scriptUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.js'),
+    //     cssUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.css')
+    // });
+
+    // Set up webview view shown in the side panel
+    const webviewViewProvider = new CustomLspSprottyViewProvider({
+        extensionUri: context.extensionUri,
+        viewType: 'states',
+        languageClient: client,
+        supportedFileExtensions: ['.aurora'],
+        openActiveEditor: true,
+        messenger: new Messenger({ignoreHiddenViews: false}),
+    });
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider('states', webviewViewProvider, {
+            webviewOptions: { retainContextWhenHidden: true }
+        })
+    );
+    registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'states' });
+    registerTextEditorSync(webviewViewProvider, context);
 }
+
 
 // This function is called when the extension is deactivated.
 export function deactivate(): Thenable<void> | undefined {
@@ -34,7 +80,15 @@ function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: '*', language: 'aurora' }]
+        documentSelector: [{ scheme: 'file', language: 'aurora' }],
+        synchronize: {
+            fileEvents: vscode.workspace.createFileSystemWatcher('**/*.aurora')
+        },
+        outputChannel: vscode.window.createOutputChannel('Aurora Language Server'),
+        initializationFailedHandler: (error) => {
+            console.error('Language server initialization failed:', error);
+            return false;
+        }
     };
 
     // Create the language client and start the client.
@@ -46,6 +100,19 @@ function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
     );
 
     // Start the client. This will also launch the server
-    client.start();
+    // Add error handling
+    client.start().catch(error => {
+        console.error('Failed to start language client:', error);
+        vscode.window.showErrorMessage(`Failed to start Aurora language server: ${error.message}`);
+    });
+
+    // Add shutdown handling
+    context.subscriptions.push(
+        client.onDidChangeState(event => {
+            if (event.newState === State.Stopped) {
+                console.log('Language server stopped');
+            }
+        })
+    );
     return client;
 }

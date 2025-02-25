@@ -28,7 +28,8 @@
         "langium-sprotty": "^3.2.0",
         "sprotty-vscode-webview": "^1.0.0",
         "vscode-languageclient": "~9.0.1",
-        "vscode-languageserver": "~9.0.1"
+        "vscode-languageserver": "~9.0.1",
+        "sprotty-vscode": "^1.0.0"
     },
     "devDependencies": {
         "@types/node": "^18.0.0",

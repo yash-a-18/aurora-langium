@@ -23,35 +23,31 @@ export class AuroraScopeComputation extends DefaultScopeComputation {
     const exportedDescriptions: AstNodeDescription[] = []
 
     for (const childNode of AstUtils.streamAllContents(document.parseResult.value)) {
-      if (isIssueCoordinate(childNode)) {
-        const fullyQualifiedName = childNode.name
+      if (isIssueCoordinate(childNode) && childNode.name) {
         exportedDescriptions.push(
           this.descriptions.createDescription(
             childNode,
-            fullyQualifiedName,
+            childNode.name,
             document
           )
         )
       }
-      if (isOrderCoordinate(childNode)) {
-        const fullyQualifiedName = childNode.name
+      if (isOrderCoordinate(childNode) && childNode.name) {
         exportedDescriptions.push(
           this.descriptions.createDescription(
             childNode,
-            fullyQualifiedName,
+            childNode.name,
             document
           )
         )
       }
-      if (isMODULE(childNode)) {
-        const fullyQualifiedName = childNode.name
-        const description = this.descriptions.createDescription(
-          childNode,
-          fullyQualifiedName,
-          document
-        )
+      if (isMODULE(childNode) && childNode.name) {
         exportedDescriptions.push(
-          description
+          this.descriptions.createDescription(
+            childNode,
+            childNode.name,
+            document
+          )
         )
       }
     }
@@ -74,29 +70,32 @@ export class AuroraScopeComputation extends DefaultScopeComputation {
   ): AstNodeDescription[] {
     const localDescriptions: AstNodeDescription[] = []
     for (const element of AstUtils.streamAllContents(container)) {
-      if (isIssueCoordinate(element)) {
-        const description = this.descriptions.createDescription(
-          element,
-          element.name,
-          document
+      if (isIssueCoordinate(element) && element.name) {
+        localDescriptions.push(
+          this.descriptions.createDescription(
+            element,
+            element.name,
+            document
+          )
         )
-        localDescriptions.push(description)
       }
-      if (isOrderCoordinate(element)) {
-        const description = this.descriptions.createDescription(
-          element,
-          element.name,
-          document
+      if (isOrderCoordinate(element) && element.name) {
+        localDescriptions.push(
+          this.descriptions.createDescription(
+            element,
+            element.name,
+            document
+          )
         )
-        localDescriptions.push(description)
       }
-      if (isMODULE(element)) {
-        const description = this.descriptions.createDescription(
-          element,
-          element.name,
-          document
+      if (isMODULE(element) && element.name) {
+        localDescriptions.push(
+          this.descriptions.createDescription(
+            element,
+            element.name,
+            document
+          )
         )
-        localDescriptions.push(description)
       }
     }
     scopes.addAll(container, localDescriptions)

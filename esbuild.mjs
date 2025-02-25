@@ -46,9 +46,28 @@ const ctx = await esbuild.context({
     plugins
 });
 
+const browserContext = await esbuild.context({
+    entryPoints: ['./aurora-webview/src/main.ts'],
+    outdir: 'pack/diagram',
+    bundle: true,
+    target: 'es6',
+    loader: { '.ts': 'ts', '.css': 'css' },
+    platform: 'browser',
+    sourcemap: !minify,
+    minify,
+    plugins,
+});
+
 if (watch) {
-    await ctx.watch();
+    await Promise.all([
+        ctx.watch(),
+        browserContext.watch()
+    ]);
 } else {
-    await ctx.rebuild();
+    await Promise.all([
+        ctx.rebuild(),
+        browserContext.rebuild()
+    ]);
     ctx.dispose();
+    browserContext.dispose();
 }
