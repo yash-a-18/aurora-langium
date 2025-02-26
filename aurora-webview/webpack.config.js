@@ -1,7 +1,7 @@
 // @ts-check
 const path = require('path');
 
-const outputPath = path.resolve(__dirname, 'out');
+const outputPath = path.resolve(__dirname, '../pack');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
