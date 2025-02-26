@@ -19,7 +19,7 @@ class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
             enableScripts: true,
             localResourceRoots
         };
-        const identifier = { clientId: 'states', diagramType: 'states', uri: 'states' };
+        const identifier = { clientId: 'aurora', diagramType: 'aurora', uri: 'aurora' };
         webview.html = doCreateWebviewHtml(identifier, container, {
             scriptUri: createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram', 'main.js'),
             cssUri: createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram', 'main.css')
@@ -29,6 +29,7 @@ class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
+    console.log("Hello Activation...")
     client = startLanguageClient(context);
     // const extensionPath = context.extensionUri.fsPath;
     // const localResourceRoots = [createFileUri(extensionPath, 'pack', 'diagram')];
@@ -36,22 +37,29 @@ export function activate(context: vscode.ExtensionContext): void {
     //     scriptUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.js'),
     //     cssUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.css')
     // });
+    // Register the focus command
+    context.subscriptions.push(
+        vscode.commands.registerCommand('aurora.focus', () => {
+            // Handle focus action
+            console.log('Aurora focus command executed');
+        })
+    );
 
     // Set up webview view shown in the side panel
     const webviewViewProvider = new CustomLspSprottyViewProvider({
         extensionUri: context.extensionUri,
-        viewType: 'states',
+        viewType: 'aurora',
         languageClient: client,
         supportedFileExtensions: ['.aurora'],
         openActiveEditor: true,
         messenger: new Messenger({ignoreHiddenViews: false}),
     });
     context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider('states', webviewViewProvider, {
+        vscode.window.registerWebviewViewProvider('aurora', webviewViewProvider, {
             webviewOptions: { retainContextWhenHidden: true }
         })
     );
-    registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'states' });
+    registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'aurora' });
     registerTextEditorSync(webviewViewProvider, context);
 }
 

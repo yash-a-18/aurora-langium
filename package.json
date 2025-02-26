@@ -75,10 +75,35 @@
                 "scopeName": "source.aurora",
                 "path": "syntaxes/aurora.tmLanguage.json"
             }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "aurora-container",
+                    "title": "Aurora",
+                    "icon": "$(symbol-structure)"
+                }
+            ]
+        },
+        "views": {
+            "aurora-container": [
+                {
+                    "id": "aurora",
+                    "type": "webview",
+                    "name": "Patient Care Scenario"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "aurora.focus",
+                "title": "Focus Aurora Diagram",
+                "category": "Aurora"
+            }
         ]
     },
     "activationEvents": [
-        "onLanguage:aurora"
+        "onWebviewPanel:aurora"
     ],
     "main": "./out/extension/main.cjs",
     "bin": {
