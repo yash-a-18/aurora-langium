@@ -31,12 +31,7 @@ class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
 export function activate(context: vscode.ExtensionContext): void {
     console.log("Hello Activation...")
     client = startLanguageClient(context);
-    // const extensionPath = context.extensionUri.fsPath;
-    // const localResourceRoots = [createFileUri(extensionPath, 'pack', 'diagram')];
-    // const createWebviewHtml = (identifier: SprottyDiagramIdentifier, container: WebviewContainer) => doCreateWebviewHtml(identifier, container, {
-    //     scriptUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.js'),
-    //     cssUri: createFileUri(extensionPath, 'pack', 'diagram', 'main.css')
-    // });
+
     // Register the focus command
     context.subscriptions.push(
         vscode.commands.registerCommand('aurora.focus', () => {

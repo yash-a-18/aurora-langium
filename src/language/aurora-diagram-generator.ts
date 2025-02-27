@@ -1,5 +1,5 @@
 import { GeneratorContext, LangiumDiagramGenerator } from 'langium-sprotty';
-import { SEdge, SLabel, SModelRoot, SNode } from 'sprotty-protocol';
+import { SEdge, SLabel, SModelRoot, SModelElement, SNode } from 'sprotty-protocol';
 import { AstNode, AstUtils } from 'langium';
 import { IssueCoordinate, Issues, NamedGroupOrder, NL_STATEMENT, OrderCoordinate, Orders, PCM } from './generated/ast.js';
 
@@ -21,25 +21,26 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
     protected generateRoot(args: GeneratorContext<PCM>): SModelRoot {
         const { document } = args;
         const sm = document.parseResult.value;
-
+    
         let ic : IssueCoordinate [] = sm.elements.filter(x => x.$type == "Issues").map(i => (i as Issues)).flatMap(x => x.coord)
         let ngo : NamedGroupOrder [] = sm.elements.filter(x => x.$type == "Orders").map(i => (i as Orders)).flatMap(x => x.namedGroups)
         let oc = ngo.filter(x=> this.ngoFilter.indexOf(x.name.replace(":","").trim()) === -1).flatMap(n=>n.orders).filter(x=> x.$type =="OrderCoordinate").map(x=>x as OrderCoordinate)
         let nar = listOfNarratives(sm).filter(x => x.$container.$type != "ClinicalCoordinate" && x.$container.$type != "NamedGroupOrder" && x.$container.$type != "NamedGroupClinical")
+        
         return {
             type: 'graph',
             id: 'pcm',
             children: [
-                ...ic.map(x=> this.generateIC(x, args)),
-                ...oc.map(x=> this.generateOC(x, args)),
-                ...nar.map(x=> this.generateNar(x,args)),
-                ...nar. map(x=> this.generateNLEdge(x, args)),
-                ...oc. map(x=> this.generateEdge(x, args)),
-                ...ic.filter(i => i.refs.length != 0 ). map(x=> this.generateEdge(x, args))
-            ]
+                ...ic.map(x=> this.generateIC(x, args)).filter(Boolean),
+                ...oc.map(x=> this.generateOC(x, args)).filter(Boolean),
+                ...nar.map(x=> this.generateNar(x,args)).filter(Boolean),
+                ...nar.map(x=> this.generateNLEdge(x, args)).filter(Boolean),
+                ...oc.map(x=> this.generateEdge(x, args)).filter(Boolean),
+                ...ic.filter(i => i.refs?.length > 0).map(x=> this.generateEdge(x, args)).filter(Boolean)
+            ] as SModelElement[]
         };
     }
-    protected generateNar(nl: NL_STATEMENT, { idCache }: GeneratorContext<PCM>): SNode {
+    protected generateNar(nl: NL_STATEMENT, { idCache }: GeneratorContext<PCM>): SModelElement {
         const nodeId = idCache.uniqueId(nl.name, nl);
         var t = "node:nl" // Neutral Nar
         switch (nl.name.trim()[1].toString()){
@@ -55,9 +56,9 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
             children: [<SLabel>{ type: 'label:darktext', id: idCache.uniqueId(nodeId + '.label'), text: nl.name}],
             layout: 'stack',
             layoutOptions: { paddingTop: 10.0, paddingBottom: 10.0, paddingLeft: 10.0, paddingRight: 10.0}
-        };
+        } as SNode;
     }
-    protected generateIC(state: IssueCoordinate, { idCache }: GeneratorContext<PCM>): SNode {
+    protected generateIC(state: IssueCoordinate, { idCache }: GeneratorContext<PCM>): SModelElement {
         const nodeId = idCache.uniqueId(state.name, state);
         return {
             type: 'node:ic',
@@ -68,9 +69,9 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
             layout: 'stack',
             layoutOptions: {paddingTop: 10.0,paddingBottom: 10.0,paddingLeft: 10.0, paddingRight: 10.0
             }
-        };
+        } as SNode;
     }
-    protected generateOC(oc: OrderCoordinate, { idCache }: GeneratorContext<PCM>): SNode {
+    protected generateOC(oc: OrderCoordinate, { idCache }: GeneratorContext<PCM>): SModelElement {
         var i = "node:oc"
         if (oc.refs.length == 0){
             i = "node:ocorphan"
@@ -82,24 +83,38 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
             children: [<SLabel>{ type: 'label:darktext', id: idCache.uniqueId(nodeId + '.label'), text: oc.name}],
             layout: 'stack',
             layoutOptions: { paddingTop: 10.0, paddingBottom: 10.0, paddingLeft: 10.0, paddingRight: 10.0            }
-        };
+        } as SNode;
     }
     // TODO, change this from ic -> (to, from )
     // And capture the ~ for the negative relationship
-    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge {
+    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge | undefined {
         const sourceId = idCache.getId(ic);
-        const targetId = idCache.getId(ic.refs[0].ref!);
-        const edgeId = idCache.uniqueId(`${sourceId}:${ic.refs[0].$refNode!.text}:${targetId}`, ic);
+        
+        // Check if refs array exists and has elements
+        if (!ic.refs || ic.refs.length === 0 || !ic.refs[0].ref) {
+            console.warn(`No valid reference found for ${ic.name}`);
+            return undefined;
+        }
+
+        const targetId = idCache.getId(ic.refs[0].ref);
+        
+        // Check if both IDs are valid
+        if (!sourceId || !targetId) {
+            console.warn(`Invalid source or target ID for ${ic.name}`);
+            return undefined;
+        }
+
+        const edgeId = idCache.uniqueId(`${sourceId}:${ic.refs[0].$refNode?.text ?? ''}:${targetId}`, ic);
+        
         return {
             type: 'edge',
             id: edgeId,
-            sourceId: sourceId!,
-            targetId: targetId!,
+            sourceId: sourceId,
+            targetId: targetId,
             children: [
                 <SLabel>{
                     type: 'label:xref',
                     id: idCache.uniqueId(edgeId + '.label'),
-                    // text: transition.event?.ref?.name
                 }
             ]
         };
