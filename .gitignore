@@ -5,5 +5,4 @@
 node_modules/
 out/
 src/language/generated/
-package-lock.json
 pack
