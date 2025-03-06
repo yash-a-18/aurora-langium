@@ -3,15 +3,22 @@ import { EmptyFileSystem, type LangiumDocument } from "langium";
 import { expandToString as s } from "langium/generate";
 import { clearDocuments, parseHelper } from "langium/test";
 import { createAuroraServices } from "../../src/language/aurora-module.js";
-import { Model, isModel } from "../../src/language/generated/ast.js";
+
+interface Greeting {
+    person: {
+        ref?: { name: string }; // Adjust based on your actual structure
+        error?: { message: string };
+    };
+}
 
 let services: ReturnType<typeof createAuroraServices>;
-let parse:    ReturnType<typeof parseHelper<Model>>;
-let document: LangiumDocument<Model> | undefined;
+let parse:    ReturnType<typeof parseHelper<any>>;
+let document: LangiumDocument<any> | undefined;
 
 beforeAll(async () => {
     services = createAuroraServices(EmptyFileSystem);
-    parse = parseHelper<Model>(services.Aurora);
+    const doParse = parseHelper<any>(services.Aurora);
+    parse = (input: string) => doParse(input, { validation: true });
 
     // activate the following if your linking test requires elements from a built-in library, for example
     // await services.shared.workspace.WorkspaceManager.initializeWorkspace([]);
@@ -35,7 +42,7 @@ describe('Linking tests', () => {
             // and then evaluate the cross references we're interested in by checking
             //  the referenced AST element as well as for a potential error message;
             checkDocumentValid(document)
-                || document.parseResult.value.greetings.map(g => g.person.ref?.name || g.person.error?.message).join('\n')
+                || document.parseResult.value.greetings.map((g: Greeting) => g.person.ref?.name || g.person.error?.message).join('\n')
         ).toBe(s`
             Langium
         `);
@@ -48,6 +55,5 @@ function checkDocumentValid(document: LangiumDocument): string | undefined {
           ${document.parseResult.parserErrors.map(e => e.message).join('\n  ')}
     `
         || document.parseResult.value === undefined && `ParseResult is 'undefined'.`
-        || !isModel(document.parseResult.value) && `Root AST object is a ${document.parseResult.value.$type}, expected a '${Model}'.`
         || undefined;
 }

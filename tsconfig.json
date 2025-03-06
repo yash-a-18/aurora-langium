@@ -2,13 +2,16 @@
     "extends": "./configs/base.tsconfig.json",
     "compilerOptions": {
         "target": "ES2017",
-        "module": "Node16",
+        "module": "NodeNext",
         "lib": [
             "ESNext"
         ],
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "dist/esm",
         "rootDir": ".",
+        "declaration": true,
+        "declarationDir": "dist/types",
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*.ts",

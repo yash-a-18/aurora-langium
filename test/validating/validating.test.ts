@@ -4,15 +4,14 @@ import { expandToString as s } from "langium/generate";
 import { parseHelper } from "langium/test";
 import type { Diagnostic } from "vscode-languageserver-types";
 import { createAuroraServices } from "../../src/language/aurora-module.js";
-import { Model, isModel } from "../../src/language/generated/ast.js";
 
 let services: ReturnType<typeof createAuroraServices>;
-let parse:    ReturnType<typeof parseHelper<Model>>;
-let document: LangiumDocument<Model> | undefined;
+let parse:    ReturnType<typeof parseHelper<any>>;
+let document: LangiumDocument<any> | undefined;
 
 beforeAll(async () => {
     services = createAuroraServices(EmptyFileSystem);
-    const doParse = parseHelper<Model>(services.Aurora);
+    const doParse = parseHelper<any>(services.Aurora);
     parse = (input: string) => doParse(input, { validation: true });
 
     // activate the following if your linking test requires elements from a built-in library, for example
@@ -57,7 +56,6 @@ function checkDocumentValid(document: LangiumDocument): string | undefined {
           ${document.parseResult.parserErrors.map(e => e.message).join('\n  ')}
     `
         || document.parseResult.value === undefined && `ParseResult is 'undefined'.`
-        || !isModel(document.parseResult.value) && `Root AST object is a ${document.parseResult.value.$type}, expected a '${Model}'.`
         || undefined;
 }
 

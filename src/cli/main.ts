@@ -6,13 +6,17 @@ import { createAuroraServices } from '../language/aurora-module.js';
 import { extractAstNode } from './cli-util.js';
 import { generateJavaScript } from './generator.js';
 import { NodeFileSystem } from 'langium/node';
-import * as url from 'node:url';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+const __dirname = path.resolve();
 
 const packagePath = path.resolve(__dirname, '..', '..', 'package.json');
-const packageContent = await fs.readFile(packagePath, 'utf-8');
+
+async function loadPackageContent() {
+    const packageContent = await fs.readFile(packagePath, 'utf-8');
+    return JSON.parse(packageContent);
+}
 
 export const getAuroraServices = async () => {
     const services = await Promise.resolve(createAuroraServices(NodeFileSystem));
@@ -30,10 +34,11 @@ export type GenerateOptions = {
     destination?: string;
 }
 
-export default function(): void {
+async function main(): Promise<void> {
     const program = new Command();
+    const packageContent = await loadPackageContent();
 
-    program.version(JSON.parse(packageContent).version);
+    program.version(packageContent.version);
 
     const fileExtensions = AuroraLanguageMetaData.fileExtensions.join(', ');
     program
@@ -45,3 +50,8 @@ export default function(): void {
 
     program.parse(process.argv);
 }
+
+main().catch(err => {
+    console.error(err);
+    process.exit(1);
+});

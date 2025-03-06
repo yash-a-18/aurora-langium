@@ -1,7 +1,7 @@
 {
     "name": "aurora-langium",
-    "description": "It containes the DSL named Aurora",
-    "version": "0.0.22",
+    "description": "It contains the DSL named Aurora",
+    "version": "0.1.0",
     "files": [
         "bin",
         "out",
@@ -9,20 +9,15 @@
         "pack",
         "dist"
     ],
-    "exports": {
-        "./dist/cli/cli-util": "./dist/cli/cli-util.js",
-        "./dist/cli/main": "./dist/cli/main.js",
-        "./dist/language/aurora-module": "./dist/language/aurora-module.js",
-        "./dist/language/aurora-validator": "./dist/language/aurora-validator.js",
-        "./dist/language/aurora-scope": "./dist/language/aurora-scope.js",
-        "./dist/language/aurora-diagram-generator": "./dist/language/aurora-diagram-generator.js",
-        "./dist/extension/main": "./dist/extension/main.js",
-        "./pack/webview": "./pack/webview.js",
-        "./pack/diagram/main": "./pack/diagram/main.js"
-    },
     "type": "module",
+    "main": "dist/cjs/index.js",
+    "exports": {
+        "import": "./dist/esm/index.js",
+        "require": "./dist/cjs/index.js"
+    },
+    "types": "dist/types/index.d.ts",
     "scripts": {
-        "build": "tsc -b tsconfig.src.json && node esbuild.mjs",
+        "build": "tsc && tsc --project tsconfig.cjs.json",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
@@ -114,7 +109,6 @@
     "activationEvents": [
         "onWebviewPanel:aurora"
     ],
-    "main": "./out/extension/main.cjs",
     "bin": {
         "aurora-cli": "./bin/cli.js"
     },
