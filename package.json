@@ -1,7 +1,7 @@
 {
     "name": "aurora-langium",
     "description": "It contains the DSL named Aurora",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "files": [
         "bin",
         "out",
@@ -10,14 +10,14 @@
         "dist"
     ],
     "type": "module",
-    "main": "dist/cjs/index.js",
+    "main": "dist/cjs/extension/main.cjs",
     "exports": {
         "import": "./dist/esm/index.js",
         "require": "./dist/cjs/index.js"
     },
     "types": "dist/types/index.d.ts",
     "scripts": {
-        "build": "tsc && tsc --project tsconfig.cjs.json",
+        "build": "tsc && tsc --project tsconfig.cjs.json && node esbuild.mjs",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
