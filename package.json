@@ -1,22 +1,22 @@
 {
     "name": "aurora-langium",
     "description": "It containes the DSL named Aurora",
-    "version": "0.0.16",
+    "version": "0.0.22",
     "files": [
         "bin",
         "out",
         "src",
-        "pack"
+        "pack",
+        "dist"
     ],
     "exports": {
-        "./out/cli/cli-util": "./out/cli/cli-util.js",
-        "./out/cli/main": "./out/cli/main.js",
-        "./out/language/aurora-module": "./out/language/aurora-module.js",
-        "./out/language/aurora-validator": "./out/language/aurora-validator.js",
-        "./out/language/aurora-scope": "./out/language/aurora-scope.js",
-        "./out/language/aurora-diagram-generator": "./out/language/aurora-diagram-generator.js",
-        "./out/language/main": "./out/language/main.js",
-        "./out/extension/main": "./out/extension/main.js",
+        "./dist/cli/cli-util": "./dist/cli/cli-util.js",
+        "./dist/cli/main": "./dist/cli/main.js",
+        "./dist/language/aurora-module": "./dist/language/aurora-module.js",
+        "./dist/language/aurora-validator": "./dist/language/aurora-validator.js",
+        "./dist/language/aurora-scope": "./dist/language/aurora-scope.js",
+        "./dist/language/aurora-diagram-generator": "./dist/language/aurora-diagram-generator.js",
+        "./dist/extension/main": "./dist/extension/main.js",
         "./pack/webview": "./pack/webview.js",
         "./pack/diagram/main": "./pack/diagram/main.js"
     },

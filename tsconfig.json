@@ -7,7 +7,7 @@
             "ESNext"
         ],
         "sourceMap": true,
-        "outDir": "out",
+        "outDir": "dist",
         "rootDir": ".",
     },
     "include": [
