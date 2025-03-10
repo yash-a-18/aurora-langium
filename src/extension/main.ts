@@ -10,8 +10,9 @@ import { LspSprottyViewProvider } from 'sprotty-vscode/lib/lsp/lsp-sprotty-view-
 import { Messenger } from 'vscode-messenger';
 
 let client: LanguageClient;
+export var wvp : LspSprottyViewProvider | undefined = undefined
 
-class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
+export class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
     protected createWebview(container: vscode.WebviewView): void {
         const webview = container.webview;
         const localResourceRoots = [createFileUri(this.options.extensionUri.fsPath, 'pack', 'diagram')];
@@ -49,6 +50,8 @@ export function activate(context: vscode.ExtensionContext): void {
         openActiveEditor: true,
         messenger: new Messenger({ignoreHiddenViews: false}),
     });
+    wvp = webviewViewProvider
+
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider('aurora', webviewViewProvider, {
             webviewOptions: { retainContextWhenHidden: true }
