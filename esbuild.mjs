@@ -28,7 +28,7 @@ const plugins = [{
 
 // Build for CommonJS
 const cjsContext = await esbuild.context({
-    entryPoints: ['src/extension/main.ts', 'src/language/main.ts'],
+    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts'],
     outdir: 'dist/cjs', // Output directory for CommonJS
     bundle: true,
     target: "ES2017",
