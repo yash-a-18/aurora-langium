@@ -53,7 +53,7 @@ export class LanguageClientConfigSingleton {
         this.serverModule =   absolutelanguageserverpath
         
 
-        console.log('****************Server module:', this.serverModule);
+        console.log('Server module:', this.serverModule);
         this.debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
 
         this.serverOptions = {
@@ -102,7 +102,7 @@ export class LanguageClientConfigSingleton {
             );
         }
         catch (error) {
-            console.error('************Failed to create language client:', error);
+            console.error('Failed to create language client:', error);
         }
         
         this.client = newClient

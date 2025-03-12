@@ -22,9 +22,9 @@ try {
     const { shared } = createAuroraServices({ connection, ...NodeFileSystem });
 
     // Start the language server with the shared services
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Starting language server...');
+    console.log('Starting language server...');
     startLanguageServer(shared);
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!language server started!!!!!!...');
+    console.log('Language server started!!!!!!...');
     addDiagramHandler(connection, shared);
 } catch (error) {
     if (error instanceof Error) {
