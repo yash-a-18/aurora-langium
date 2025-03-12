@@ -1,13 +1,10 @@
 import * as vscode from 'vscode';
-// import type * as vscode from 'vscode';
-
-
+import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
-
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
-    console.log("Hello Arnold Activation...")
+    console.log("Hello Aurora Activation...")
     // Register the focus command
     context.subscriptions.push(
         vscode.commands.registerCommand('aurora.focus', () => {
@@ -15,13 +12,11 @@ export function activate(context: vscode.ExtensionContext): void {
             console.log('Aurora focus command executed');
         })
     );
-    const langConfig = LanguageClientConfigSingleton.getInstance()
-    langConfig.initialize(context)
+    const langConfig = LanguageClientConfigSingleton.getInstance();
+    langConfig.setServerModule(context.asAbsolutePath(path.join('dist', 'cjs/language', 'main.cjs'))); // Set serverModule
+    langConfig.initialize(context);
     langConfig.registerWebviewViewProvider()
-
-
 }
-
 
 // This function is called when the extension is deactivated.
 export function deactivate(): Thenable<void> | undefined {

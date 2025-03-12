@@ -2,15 +2,20 @@ import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/
 import { LspSprottyViewProvider } from 'sprotty-vscode/lib/lsp/lsp-sprotty-view-provider.js';
 import * as vscode from 'vscode';
 import { Messenger } from 'vscode-messenger';
-import * as path from 'node:path';
 import { LanguageClient, TransportKind, State } from 'vscode-languageclient/node.js';
 import { createFileUri, createWebviewHtml as doCreateWebviewHtml } from 'sprotty-vscode';
 import {  registerDefaultCommands, registerTextEditorSync } from 'sprotty-vscode';
 
-
-
 export class LanguageClientConfigSingleton {
     private static instance: LanguageClientConfigSingleton;
+    private serverModule: string | undefined;
+    private debugOptions: { execArgv: string[]; } | undefined;
+    private serverOptions: ServerOptions | undefined;
+    private clientOptions: LanguageClientOptions | undefined;
+    private client: LanguageClient | undefined;
+    private webviewViewProvider: LspSprottyViewProvider | undefined;
+    private context: vscode.ExtensionContext | undefined;
+
     private constructor() {
     }
 
@@ -21,12 +26,13 @@ export class LanguageClientConfigSingleton {
         return this.instance
     }
 
-    public serverModule: string | undefined;
-    public debugOptions: { execArgv: string[]; } | undefined;
-    public serverOptions: ServerOptions | undefined;
-    public clientOptions: LanguageClientOptions | undefined;
-    public client: LanguageClient | undefined;
-    private webviewViewProvider: LspSprottyViewProvider | undefined;
+    public getServerModule(): string | undefined {
+        return this.serverModule;
+    }
+
+    public setServerModule(module: string): void {
+        this.serverModule = module;
+    }
 
     get webviewProvider(): LspSprottyViewProvider | undefined { 
         if(this.webviewViewProvider === undefined) {
@@ -42,25 +48,21 @@ export class LanguageClientConfigSingleton {
         
         return this.webviewViewProvider
     }
-    
-    private context: vscode.ExtensionContext | undefined;
+
+    public get clientInstance(): LanguageClient | undefined {
+        return this.client;
+    }
 
     initialize(context: vscode.ExtensionContext) {
-        const absolutelanguageserverpath = "c:\\dev\\projects\\LANGIUMSJS\\aurora-langium\\dist\\cjs\\language\\main.cjs"
-        const languageserverpath1 = context.asAbsolutePath(path.join('dist', 'cjs/language', 'main.cjs'));
-        console.log("constructed path" + languageserverpath1)
         this.context = context;
-        this.serverModule =   absolutelanguageserverpath
-        
 
-        console.log('Server module:', this.serverModule);
+        console.log('Server module:', this.getServerModule());
         this.debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
 
         this.serverOptions = {
-            run: { module: this.serverModule, transport: TransportKind.ipc },
-            debug: { module: this.serverModule, transport: TransportKind.ipc, options: this.debugOptions }
+            run: { module: this.getServerModule()!, transport: TransportKind.ipc },
+            debug: { module: this.getServerModule()!, transport: TransportKind.ipc, options: this.debugOptions }
         };
-        
         
         this.clientOptions = {
             documentSelector: [{ scheme: 'file', language: 'aurora' }],
@@ -73,8 +75,7 @@ export class LanguageClientConfigSingleton {
                 return false;
             }
         };
-        
-        this.startClient()
+        this.startClient();
     }
 
     public registerWebviewViewProvider(): void {
@@ -132,8 +133,6 @@ export class LanguageClientConfigSingleton {
         this.client = undefined;
     }
 }
-
-
 
 class CustomLspSprottyViewProvider extends LspSprottyViewProvider {
     protected createWebview(container: vscode.WebviewView): void {
