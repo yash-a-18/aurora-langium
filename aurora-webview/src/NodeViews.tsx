@@ -15,7 +15,8 @@ export class NarrativeNodeView extends ShapeView {
         return <g>
             <ellipse class-sprotty-nl-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
                   class-mouseover={node.hoverFeedback} class-selected={node.selected}
-                  cx={node.size.width*0.5} cy={node.size.height*0.5} rx={node.size.width*0.55} ry={node.size.height*0.65}></ellipse>
+                  cx={node.size.width * 0.5} cy={node.size.height * 0.5} 
+                  rx={Math.max(node.size.width * 0.55, 0)} ry={Math.max(node.size.height * 0.65, 0)}></ellipse>
             {context.renderChildren(node)}
         </g>;
     }
@@ -30,7 +31,8 @@ export class NarrativeDraftNodeView extends ShapeView {
         return <g>
             <ellipse class-sprotty-nldraft-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
                   class-mouseover={node.hoverFeedback} class-selected={node.selected}
-                  cx={node.size.width*0.5} cy={node.size.height*0.5} rx={node.size.width*0.55} ry={node.size.height*0.65}></ellipse>
+                  cx={node.size.width * 0.5} cy={node.size.height * 0.5} 
+                  rx={Math.max(node.size.width * 0.55, 0)} ry={Math.max(node.size.height * 0.65, 0)}></ellipse>
             {context.renderChildren(node)}
         </g>;
     }
@@ -45,7 +47,8 @@ export class NarrativeExclamationNodeView extends ShapeView {
         return <g>
             <ellipse class-sprotty-nlexclamation-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
                   class-mouseover={node.hoverFeedback} class-selected={node.selected}
-                  cx={node.size.width*0.5} cy={node.size.height*0.5} rx={node.size.width*0.55} ry={node.size.height*0.65}></ellipse>
+                  cx={node.size.width * 0.5} cy={node.size.height * 0.5} 
+                  rx={Math.max(node.size.width * 0.55, 0)} ry={Math.max(node.size.height * 0.65, 0)}></ellipse>
             {context.renderChildren(node)}
         </g>;
     }
@@ -60,7 +63,8 @@ export class NarrativeTaskCompletedNodeView extends ShapeView {
         return <g>
             <ellipse class-sprotty-nltaskcompleted-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
                   class-mouseover={node.hoverFeedback} class-selected={node.selected}
-                  cx={node.size.width*0.5} cy={node.size.height*0.5} rx={node.size.width*0.55} ry={node.size.height*0.65}></ellipse>
+                  cx={node.size.width * 0.5} cy={node.size.height * 0.5} 
+                  rx={Math.max(node.size.width * 0.55, 0)} ry={Math.max(node.size.height * 0.65, 0)}></ellipse>
             {context.renderChildren(node)}
         </g>;
     }
@@ -75,7 +79,8 @@ export class NarrativeTaskNodeView extends ShapeView {
         return <g>
             <ellipse class-sprotty-nltask-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
                   class-mouseover={node.hoverFeedback} class-selected={node.selected}
-                  cx={node.size.width*0.5} cy={node.size.height*0.5} rx={node.size.width*0.55} ry={node.size.height*0.65}></ellipse>
+                  cx={node.size.width * 0.5} cy={node.size.height * 0.5} 
+                  rx={Math.max(node.size.width * 0.55, 0)} ry={Math.max(node.size.height * 0.65, 0)}></ellipse>
             {context.renderChildren(node)}
         </g>;
     }
