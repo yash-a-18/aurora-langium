@@ -1,0 +1,29 @@
+module: chf_drkim
+
+Issues:
+chf :Congestive_heart_failure
+
+Orders:
+Diet: NAS (chf)
+Activity: semifowlers (chf)
+Vitals: vitals(chf) ??q4h;
+
+AlliedHealthConsults:
+  chf_navigator (chf)
+
+Investigations:
+  echocardiogram (chf) ?? suspected chf ;
+  cxr (chf) ?? pa/lat ;
+  /* measuring weights is for monitoring fluid balance*/
+  weights (chf) ?? daily;
+
+  Daily_Labs:  ?? for 3 days;
+  bnp(chf) lytes(chf)  bun(chf) creatinine(chf)
+  foley_catheter (chf) ??accurate fluid ins/outs;
+  
+ Treatment:
+  iv(chf) ??saline lock;
+  /*helps to reduce preload as well as reduce hypervolemia*/
+  furosemide (chf) ??40 mg iv now;  ??40 mg iv od (on top of home lasix dose);
+  nitroglycerine (chf)  ??i puffs q1h prn until systolic <= 140;
+  o2  (chf) ??to keep sats > 95%;
