@@ -1,0 +1,20 @@
+module: MI_DrKim_2024
+
+Issues:
+mi : Myocardial_infarction
+
+Orders:
+Diet: NAS (mi)
+Activity:
+
+Investigations:
+Treatment:
+  consult(mi) !!cardiology stat;
+  asa (mi) !! 160 mg po stat and 80 mg po od ;
+  enoxaparin(mi) ?? 1mg/kg bid ;
+  plavix (mi) ?? 300mg po now and 75 mg po od ;
+  rosuvastatin(mi) ??5 mg po od ;
+  iv(mi) ??NS @ 75cc/hr;
+Symptom_Control:
+  morphine  (mi) ?? 2-5 mg iv q4h prn ;
+  gravol  (mi) ?? 25-50 mg iv q4h prn ;
