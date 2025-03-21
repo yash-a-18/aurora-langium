@@ -1,11 +1,13 @@
 grammar Aurora
 
+import './aurora-arith';
+
 entry PCM:
     package=PACKAGE ?
     imports+=Import *
     module=MODULE ?
     template=TEMPLATE ?
-    elements+=(Issues |  Orders | Clinical)*
+    elements+=(Issues |  Orders | Clinical | Arith_Module | Evaluation)*
 ;
 
 /* Package and Import */
@@ -121,10 +123,9 @@ terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
 
 terminal NL_STATEMENTMULTI returns string: PREFIXMULTI  -> ';'  ;
 terminal ID_WITH_COLON: /[a-zA-Z0-9_]+:/;
-terminal ID: /[a-zA-Z0-9_]+/;
+// terminal ID: /[a-zA-Z0-9_]+/;
 terminal SINGLENL returns string: /-(\??|\.\?|!|x)?([^\n]*)/;
-terminal INT: /[0-9]+/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;
 terminal SL_COMMENT returns string:'//'  !('\n' | '\r' )('\r'? '\n' )?  ;
-hidden terminal WS: /\s+/;
+// hidden terminal WS: /\s+/;
 terminal QUTERMINAL returns string:('?' | '!' | '*' | '~' );

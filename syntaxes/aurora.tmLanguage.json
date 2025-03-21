@@ -9,6 +9,9 @@
       "include": "#comments"
     },
     {
+      "include": "#arith"
+    },
+    {
       "name": "storage.type",
       "match": "\\b(from|import|module|Treatment|Treatments|package|template|time|y|Investigations|Investigation|Issues|Clinical|Activity|Orders|Vitals|Vital|Treatment|Antibiotics|Antibiotic|Diet|Labs|Lab)\\b"
     },
@@ -31,6 +34,26 @@
     {
       "name": "invalid.deprecated",
       "match": "[-][!][\\s\\S]*"
+    },
+    {
+      "name": "keyword.control.aurora",
+      "match": "\\b(def|module|arith_module)\\b"
+    },
+    {
+      "name": "constant.numeric.aurora",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    {
+      "name": "keyword.operator.aurora",
+      "match": "[+\\-*/%^]"
+    },
+    {
+      "name": "punctuation.separator.aurora",
+      "match": "[;:,]"
+    },
+    {
+      "name": "punctuation.brackets.aurora",
+      "match": "[(){}]"
     },
     {
         "name": "string.quoted.double.n",
@@ -82,6 +105,10 @@
     {
         "name": "keyword.control",
         "match": "[-][.][\\s\\S]*"
+    },
+    {
+      "name": "keyword.control.aurora",
+      "match": "\\b(def|module)\\b"
     }
   ],
   "repository": {
@@ -111,6 +138,30 @@
           },
           "end": "(?=$)",
           "name": "comment.line.aurora"
+        }
+      ]
+    },
+    "arith": {
+      "patterns": [
+        {
+          "name": "keyword.control.arith",
+          "match": "\\b(def|arith_module)\\b"
+        },
+        {
+          "name": "constant.numeric.arith",
+          "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+        },
+        {
+          "name": "keyword.operator.arith",
+          "match": "[+\\-*/%^]"
+        },
+        {
+          "name": "punctuation.separator.arith",
+          "match": "[;:,]"
+        },
+        {
+          "name": "punctuation.brackets.arith",
+          "match": "[(){}]"
         }
       ]
     }
