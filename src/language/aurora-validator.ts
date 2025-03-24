@@ -9,7 +9,7 @@ export function registerValidationChecks(services: AuroraServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.AuroraValidator;
     const checks: ValidationChecks<AuroraAstType> = {
-        IssueCoordinate: validator.checkIssueCoordinateStartsWithCapital
+        // IssueCoordinate: validator.checkIssueCoordinateStartsWithCapital
     };
     registry.register(checks, validator);
 }
