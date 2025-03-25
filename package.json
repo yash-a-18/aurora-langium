@@ -30,7 +30,7 @@
     },
     "types": "dist/types/index.d.ts",
     "scripts": {
-        "build": "npm run build:aurora-webview && tsc && tsc --project tsconfig.cjs.json && node esbuild.mjs",
+        "build": "tsc && tsc --project tsconfig.cjs.json && node esbuild.mjs",
         "build:aurora-webview": "cd aurora-webview && npm i && npm run build",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
@@ -38,7 +38,7 @@
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
         "test": "vitest run",
-        "prepare": "npm run langium:generate && npm run build"
+        "prepare": "npm i && npm run build:aurora-webview && npm run langium:generate && npm run build"
     },
     "dependencies": {
         "chalk": "~5.3.0",
