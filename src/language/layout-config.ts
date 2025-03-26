@@ -6,7 +6,7 @@ export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
 
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         return {
-            "elk.algorithm": "stress",
+            "elk.algorithm": "layered", // best for a directed acyclic graph
             'org.eclipse.elk.stress.desiredEdgeLength': '200.0',
         };
     }

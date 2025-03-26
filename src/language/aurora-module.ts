@@ -5,9 +5,9 @@ import { AuroraValidator, registerValidationChecks } from './aurora-validator.js
 import { AuroraScopeComputation } from './aurora-scope.js';
 import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
-// import { AuroraLayoutConfigurator } from './layout-config.js';
-// import { DefaultElementFilter, ElkLayoutEngine} from 'sprotty-elk';
-// import ElkConstructor from 'elkjs/lib/elk.bundled.js';
+import { AuroraLayoutConfigurator } from './layout-config.js';
+import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
+import ElkConstructor from 'elkjs/lib/elk.bundled.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -16,11 +16,11 @@ export type AuroraAddedServices = {
     validation: {
         AuroraValidator: AuroraValidator
     },
-    // layout: {
-    //     ElkFactory: ElkFactory,
-    //     ElementFilter: IElementFilter,
-    //     LayoutConfigurator: ILayoutConfigurator
-    // }
+    layout: {
+        ElkFactory: ElkFactory,
+        ElementFilter: IElementFilter,
+        LayoutConfigurator: ILayoutConfigurator
+    }
 }
 
 /**
@@ -37,7 +37,7 @@ export type AuroraServices = LangiumSprottyServices & LangiumServices & AuroraAd
 export const AuroraModule: Module<AuroraServices, PartialLangiumServices & SprottyDiagramServices & AuroraAddedServices> = {
     diagram: {
         DiagramGenerator: services => new AuroraDiagramGenerator(services),
-        // ModelLayoutEngine: services => new ElkLayoutEngine(services.layout.ElkFactory, services.layout.ElementFilter, services.layout.LayoutConfigurator) as any
+        ModelLayoutEngine: services => new ElkLayoutEngine(services.layout.ElkFactory, services.layout.ElementFilter, services.layout.LayoutConfigurator) as any
     },
     validation: {
         AuroraValidator: () => new AuroraValidator()
@@ -45,11 +45,11 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
     references: {
         ScopeComputation: (services) => new AuroraScopeComputation(services),
     },
-    // layout: {
-    //     ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
-    //     ElementFilter: () => new DefaultElementFilter,
-    //     LayoutConfigurator: () => new AuroraLayoutConfigurator,
-    // },
+    layout: {
+        ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
+        ElementFilter: () => new DefaultElementFilter,
+        LayoutConfigurator: () => new AuroraLayoutConfigurator,
+    },
 };
 
 /**
