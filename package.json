@@ -38,7 +38,7 @@
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
         "test": "vitest run",
-        "prepare": "npm i && npm run build:aurora-webview && npm run langium:generate && npm run build"
+        "aurora": "npm i && npm run build:aurora-webview && npm run langium:generate && npm run build"
     },
     "dependencies": {
         "chalk": "~5.3.0",
