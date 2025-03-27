@@ -3,6 +3,16 @@ import chalk from 'chalk';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { URI } from 'langium';
+import { PCM } from '../language/generated/ast.js';
+import { NodeFileSystem } from 'langium/node';
+import { createAuroraServices } from '../language/aurora-module.js';
+
+export const parse = async (fileName: string): Promise<PCM> => {
+    const services = createAuroraServices(NodeFileSystem).Aurora;
+    const module = await extractAstNode<PCM>(fileName, services);
+
+    return module;
+};
 
 export async function extractDocument(fileName: string, services: LangiumCoreServices): Promise<LangiumDocument> {
     const extensions = services.LanguageMetaData.fileExtensions;
