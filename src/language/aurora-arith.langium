@@ -2,7 +2,9 @@ grammar Arith
 
 entry Arith_Module:
     'arith_module' name=ID
-    (statements+=Statement)*;
+    '{'
+    (statements+=Statement)*
+    '}';
 
 Statement:
     Definition | Evaluation;

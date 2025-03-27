@@ -1,10 +1,17 @@
 Clinical:
 NGC1:
-CC1 - Nar1
+// Spaces are optional after hypen now
+CC1 - 'Nar1'
 
-arith_module binaryexpressions
-3 * 6;
-2 + 1;
-4 / 1;
-4 ^ 2;
-8 % 2;
+arith_module binaryexpressions {
+    3 * 6;
+    2 + (1 + 1);
+    4 / 1;
+    (4 + 2) / 3 * 2;
+    10 - 2 * 5 / 3;
+    4 ^ 2;
+    8 % 2;
+    6 - 1;
+    1 - 5;
+    (5 + 1) - 7 * (1 - 3);
+}

@@ -117,14 +117,16 @@ QU: query=QUTERMINAL;
 
 Snomed:name=ID;
 
+//For all PREFIX SINGLE the single quotes are mandatory
 terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )? ;
+// For all PREFIX MULTI the single quotes are optional but semi-colon at the end is mandatory
 terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
 
 
-terminal NL_STATEMENTMULTI returns string: PREFIXMULTI  -> ';'  ;
+terminal NL_STATEMENTMULTI returns string: PREFIXMULTI -> /[^\n]*;/;
 terminal ID_WITH_COLON: /[a-zA-Z0-9_]+:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
-terminal SINGLENL returns string: /-(\??|\.\?|!|x)?([^\n]*)/;
+terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;
 terminal SL_COMMENT returns string:'//'  !('\n' | '\r' )('\r'? '\n' )?  ;
 // hidden terminal WS: /\s+/;
