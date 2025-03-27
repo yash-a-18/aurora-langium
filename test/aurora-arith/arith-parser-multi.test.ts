@@ -1,13 +1,11 @@
 import { expect, test } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { PCM, Arith_Module, Evaluation } from '../../src/language/generated/ast.js';
 import { interpretEvaluations } from '../../src/language/aurora-arith-evaluator.js';
 import { parse } from '../../src/cli/cli-util.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.relative(process.cwd(), path.dirname(__filename)); // Relative to the current working directory
 
 interface TestCase {
     expression: string;

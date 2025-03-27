@@ -4,10 +4,8 @@ import path from 'path';
 import { PCM, Arith_Module } from '../../src/language/generated/ast.js';
 import { interpretEvaluations } from '../../src/language/aurora-arith-evaluator.js';
 import { parse } from '../../src/cli/cli-util.js';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.relative(process.cwd(), path.dirname(__filename)); // Relative to the current working directory
 
 interface TestCase {
     expression: string;
