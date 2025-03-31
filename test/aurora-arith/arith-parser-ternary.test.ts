@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { PCM, Arith_Module } from '../../src/language/generated/ast.js';
 import { interpretEvaluations } from '../../src/language/aurora-arith-evaluator.js';
-import { parse } from '../../src/cli/cli-util.js';
+import { parse } from '../../src/cli/index.js';
 
 const __dirname = path.relative(process.cwd(), path.dirname(__filename)); // Relative to the current working directory
 

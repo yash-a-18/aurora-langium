@@ -27,11 +27,12 @@
             "require": "./dist/cjs/extension/main.cjs",
             "types": "./dist/types/src/extension/main.d.ts"
         },
-        "./dist/cjs/src/cli/cli-util.js": {
-            "import": "./dist/cjs/src/cli/cli-util.js",
-            "require": "./dist/cjs/src/cli/cli-util.js",
-            "types": "./dist/types/src/cli/cli-util.d.ts"
+        "./cli": {
+            "import": "./dist/cjs/cli/index.cjs",
+            "require": "./dist/cjs/cli/index.cjs",
+            "types": "./dist/types/src/cli/index.d.ts"
         }
+
     },
     "types": "dist/types/index.d.ts",
     "scripts": {
