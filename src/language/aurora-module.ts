@@ -29,6 +29,10 @@ export type AuroraAddedServices = {
  */
 export type AuroraServices = LangiumSprottyServices & LangiumServices & AuroraAddedServices
 
+export var diagramOptions = {
+    layout : "stress"
+} 
+
 /**
  * Dependency injection module that overrides Langium default services and contributes the
  * declared custom services. The Langium defaults can be partially specified to override only
@@ -48,7 +52,7 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
     layout: {
         ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
         ElementFilter: () => new DefaultElementFilter,
-        LayoutConfigurator: () => new AuroraLayoutConfigurator,
+        LayoutConfigurator: () => new AuroraLayoutConfigurator(diagramOptions.layout),
     },
 };
 

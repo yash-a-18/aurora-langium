@@ -4,9 +4,17 @@ import { SGraph, SModelIndex, SNode, SPort } from 'sprotty-protocol';
 
 export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
 
+    private layoutAlgorithm!: string;
+
+    constructor(alg: string) {
+        super()
+        this.layoutAlgorithm = alg 
+    }
+    
+
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         return {
-            "elk.algorithm": "layered", // best for a directed acyclic graph
+            "elk.algorithm": this.layoutAlgorithm, 
             'org.eclipse.elk.stress.desiredEdgeLength': '200.0',
         };
     }

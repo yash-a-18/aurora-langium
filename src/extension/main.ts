@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
+import { diagramOptions } from '../language/aurora-module.js';
 
 
 // This function is called when the extension is activated.
@@ -23,6 +24,37 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showTextDocument(d.uri, { preview: false });
             })
     })
+    
+    // adding toggle command TO DO: consolidate all commands in a separate folder
+        context.subscriptions.push(
+            vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => {
+                let quickPick = vscode.window.createQuickPick();
+                quickPick.placeholder = 'Choose a layout for your diagram...';
+                let layoutOptions = ['Stress', 'Layered', 'MrTree'];
+                quickPick.items = layoutOptions.map(x => { return { label: x }; });
+                
+                quickPick.onDidChangeSelection(selection => {
+                    if (selection && selection.length > 0) {
+                        diagramOptions.layout = selection[0].label.toLowerCase();
+                    }
+                });
+                
+                quickPick.show();
+                
+                quickPick.onDidAccept(() => {
+                    console.log('new diagram layout: ' + diagramOptions.layout)
+                    let activeTextEditor = vscode.window.activeTextEditor
+                    if(activeTextEditor) {
+                        let d = activeTextEditor.document
+                        langConfig.webviewProvider?.openDiagram(d.uri, { reveal: true }).then((o : any) =>{
+                            vscode.window.showTextDocument(d.uri, { preview: false });
+                        })
+                    }
+
+                    quickPick.dispose();
+                });
+            })
+        );
 }
 
 // This function is called when the extension is deactivated.
