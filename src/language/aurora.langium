@@ -58,7 +58,7 @@ SingleValueUnit :
 ;
 
 Fraction returns string: INT '/' INT;
-Boolean returns string: 'y' | 'n' ;
+Boolean returns string: 'TRUE' | 'FALSE' ;
 Float returns string: INT '.' INT ;
 
 TimeStamp:
