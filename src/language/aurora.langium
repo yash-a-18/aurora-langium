@@ -111,8 +111,8 @@ MutuallyExclusive:
 TEMPLATE: "template" name=ID  elements+=(Clinical |  Orders)*;
 MODULE:   "module:"  name=ID  elements+=(Issues |  Orders)*;
 
-AuroraDate returns string:INT '/' INT '/' INT  | INT | INT '/' INT;
-Time returns string: INT ':' INT ;
+AuroraDate returns string:NUMBER '/' NUMBER '/' NUMBER  | NUMBER | NUMBER '/' NUMBER;
+Time returns string: NUMBER ':' NUMBER ;
 QU: query=QUTERMINAL;
 
 Snomed:name=ID;
@@ -124,7 +124,7 @@ terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
 
 
 terminal NL_STATEMENTMULTI returns string: PREFIXMULTI -> /[^\n]*;/;
-terminal ID_WITH_COLON: /[a-zA-Z0-9_]+:/;
+terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
 terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;

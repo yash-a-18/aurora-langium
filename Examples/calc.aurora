@@ -1,7 +1,7 @@
 Clinical:
-NGC1:
+NGC1: @10:30
 // Spaces are optional after hypen now
-CC1 - 'Nar1'
+@2023/11/16 10:30 CC1 - 'Nar1'
 
 arith_module binaryexpressions {
     3 * 6;
