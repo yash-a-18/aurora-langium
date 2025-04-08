@@ -1,13 +1,14 @@
 {
     "name": "aurora-langium",
     "description": "It contains the DSL named Aurora",
-    "version": "0.2.4",
+    "version": "0.2.5",
     "files": [
         "bin",
         "out",
         "src",
         "pack",
-        "dist"
+        "dist",
+        "syntaxes"
     ],
     "type": "module",
     "main": "dist/cjs/extension/main.cjs",
