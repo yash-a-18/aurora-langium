@@ -53,13 +53,13 @@ ClinicalValue:
 /* Value Unit */
 SingleValueUnit :
     negative='(-)' ?
-    value=(ID | INT | Float | Fraction | Boolean  )
-    unit=(ID | INT | Float | Fraction | Boolean | '_'  )
+    value=(ID | NUMBER | Float | Fraction | Boolean  )
+    unit=(ID | NUMBER | Float | Fraction | Boolean | '_'  )
 ;
 
-Fraction returns string: INT '/' INT;
+Fraction returns string: NUMBER '/' NUMBER;
 Boolean returns string: 'TRUE' | 'FALSE' ;
-Float returns string: INT '.' INT ;
+Float returns string: NUMBER '.' NUMBER ;
 
 TimeStamp:
     '@' ((empty="time" ) | (date=AuroraDate  | time=Time  )| (date=AuroraDate  time=Time  ) )

@@ -3,6 +3,8 @@ NGC1: @10:30
 // Spaces are optional after hypen now
 @2023/11/16 10:30 CC1 - 'Nar1'
 
+Hb[13.5 mg, 12.8 mg] -- 'Normal range for adult female.';
+
 arith_module binaryexpressions {
     3 * 6;
     2 + (1 + 1);
