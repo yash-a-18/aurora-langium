@@ -130,14 +130,8 @@
           }
         },
         {
-          "begin": "//\n\r",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.whitespace.comment.leading.aurora"
-            }
-          },
-          "end": "(?=$)",
-          "name": "comment.line.aurora"
+          "name": "comment.line.aurora",
+          "match": "(//).*$"
         }
       ]
     },

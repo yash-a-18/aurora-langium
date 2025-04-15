@@ -128,6 +128,5 @@ terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
 terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;
-terminal SL_COMMENT returns string:'//'  !('\n' | '\r' )('\r'? '\n' )?  ;
 // hidden terminal WS: /\s+/;
 terminal QUTERMINAL returns string:('?' | '!' | '*' | '~' );

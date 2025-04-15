@@ -47,4 +47,4 @@ terminal NUMBER returns number: /[0-9]+(\.[0-9]*)?/;
 terminal ID: /[a-zA-Z0-9_]+/;
 terminal INT: /[0-9]+/;
 hidden terminal ARITH_ML_COMMENT: /\/\*[\s\S]*?\*\//;
-hidden terminal ARITH_SL_COMMENT: /\/\/[^\n\r]*/;
+hidden terminal SL_COMMENT returns string:'//'  !('\n' | '\r' )('\r'? '\n' )?  ;

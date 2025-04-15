@@ -1,9 +1,8 @@
 Issues:
 IC1 : ic1
 
-/* comments are skipped */
-
 Orders:
+/* comments are skipped */
 ngo1:
 oc0 - 'single line normal'
 
