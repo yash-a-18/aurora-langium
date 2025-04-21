@@ -7,19 +7,16 @@ const shared = require('../../../shared/utils')
 export class UpdateLayoutActionHandler implements IActionHandler {
 
     constructor(
-        @inject(TYPES.ModelSource) protected readonly modelSource: ModelSource,
-        // @inject(TYPES.Action) protected readonly actionDispatcher: ActionDispatcher
+        @inject(TYPES.ModelSource) protected readonly modelSource: ModelSource
     ) {}
 
     handle(action: Action): void {
-        const layout = (action as any).layout;
+        const layout: string = (action as any).layout;
         console.log(`[aurora-webview] Changing layout to: ${layout}`);
+        // this is the way to call pre-set actions (handy syntax to keep on file, but does not seem to work for triggering layout changes specifically)
+        // this.modelSource.actionDispatcher.dispatch(someAction) 
 
-        // const root = this.modelSource.model; // assume the layout has been applied already
-        // console.log('current root')
-        // console.log(root)
-        
-        // this.actionDispatcher.dispatch(UpdateModelAction.create(root));
+        // currently inspecting elk-layout.spec.ts for more knowledge
     }
 
     accepts(action: Action): boolean {

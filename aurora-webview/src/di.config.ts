@@ -38,6 +38,7 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
 
 
+
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
