@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
-import { diagramOptions } from '../language/aurora-module.js';
-
+import { globalAuroraLayoutConfigurator } from '../language/aurora-language-utils.js';
+import { UPDATE_LAYOUT_ACTION_KIND, UpdateLayoutAction } from '../../shared/utils.js';
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
@@ -25,6 +25,10 @@ export function activate(context: vscode.ExtensionContext): void {
             })
     })
     
+
+    // var container: Container | undefined = auroraSprottyStarter.currentAuroraContainer
+    // const modelSource = container?.get<LocalModelSource>(TYPES.ModelSource);
+    
     // adding toggle command TO DO: consolidate all commands in a separate folder
         context.subscriptions.push(
             vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => {
@@ -35,21 +39,24 @@ export function activate(context: vscode.ExtensionContext): void {
                 
                 quickPick.onDidChangeSelection(selection => {
                     if (selection && selection.length > 0) {
-                        diagramOptions.layout = selection[0].label.toLowerCase();
+                        // 1. Update global layout choice (so that it is accessible in aurora-module)
+                        globalAuroraLayoutConfigurator.diagramLayout = selection[0].label.toLowerCase();
                     }
                 });
                 
                 quickPick.show();
                 
                 quickPick.onDidAccept(() => {
-                    console.log('new diagram layout: ' + diagramOptions.layout)
-                    let activeTextEditor = vscode.window.activeTextEditor
-                    if(activeTextEditor) {
-                        let d = activeTextEditor.document
-                        langConfig.webviewProvider?.openDiagram(d.uri, { reveal: true }).then((o : any) =>{
-                            vscode.window.showTextDocument(d.uri, { preview: false });
-                        })
-                    }
+                    console.log('QUICKPICK ITEM ACCEPTED')
+                    // 2. Fire message containing the diagram identifier? and new layout
+                    const layout = globalAuroraLayoutConfigurator.diagramLayout;
+
+                    const action: UpdateLayoutAction = {
+                        kind: UPDATE_LAYOUT_ACTION_KIND,
+                        layout
+                    };
+
+                    langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);                  
 
                     quickPick.dispose();
                 });

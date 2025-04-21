@@ -9,16 +9,26 @@ import { createStateDiagramContainer } from './di.config';
 import { PaletteButtonView } from './html-views';
 import { PaletteButton } from 'sprotty-vscode-webview/lib/lsp/editing/index.js';
 
+
 export class StatesSprottyStarter extends SprottyLspEditStarter {
 
+    private auroraContainer: Container | undefined;
+
+    get currentAuroraContainer() {
+        return this.auroraContainer
+    }
+
     protected override createContainer(diagramIdentifier: SprottyDiagramIdentifier) {
-        return createStateDiagramContainer(diagramIdentifier.clientId);
+        const container = createStateDiagramContainer(diagramIdentifier.clientId);
+        this.auroraContainer = container
+        return this.auroraContainer
     }
 
     protected override addVscodeBindings(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
         super.addVscodeBindings(container, diagramIdentifier);
         configureModelElement(container, 'button:create', PaletteButton, PaletteButtonView);
     }
+
 }
 
-new StatesSprottyStarter().start();
+new StatesSprottyStarter().start()

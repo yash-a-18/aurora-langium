@@ -5,9 +5,10 @@ import { AuroraValidator, registerValidationChecks } from './aurora-validator.js
 import { AuroraScopeComputation } from './aurora-scope.js';
 import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
-import { AuroraLayoutConfigurator } from './layout-config.js';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
+import { globalAuroraLayoutConfigurator } from './aurora-language-utils.js';
+
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -29,9 +30,6 @@ export type AuroraAddedServices = {
  */
 export type AuroraServices = LangiumSprottyServices & LangiumServices & AuroraAddedServices
 
-export var diagramOptions = {
-    layout : "stress"
-} 
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
@@ -52,7 +50,7 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
     layout: {
         ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
         ElementFilter: () => new DefaultElementFilter,
-        LayoutConfigurator: () => new AuroraLayoutConfigurator(diagramOptions.layout),
+        LayoutConfigurator: () => globalAuroraLayoutConfigurator,
     },
 };
 

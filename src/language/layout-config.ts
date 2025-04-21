@@ -11,10 +11,17 @@ export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
         this.layoutAlgorithm = alg 
     }
     
+    set diagramLayout(alg: string) {
+        this.layoutAlgorithm = alg
+    }
+
+    get diagramLayout() {
+        return this.layoutAlgorithm
+    }
 
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         return {
-            "elk.algorithm": this.layoutAlgorithm, 
+            "elk.algorithm": this.diagramLayout, 
             'org.eclipse.elk.stress.desiredEdgeLength': '200.0',
         };
     }

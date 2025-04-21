@@ -8,7 +8,8 @@ import {
     PreRenderedView, RectangularNodeView, SGraphView, SLabelView,alignFeature,
     SRoutingHandleImpl, SRoutingHandleView, TYPES, loadDefaultModules, openFeature,
     hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule, SGraphImpl,
-    SLabelImpl, SModelRootImpl
+    SLabelImpl, SModelRootImpl,
+    configureActionHandler
 } from 'sprotty';
 import { DarkTextLabelView } from './LabelViews'
 
@@ -18,13 +19,25 @@ import { NarrativeDraftNodeView,
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
+
+
 
 const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
+    
+
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
     rebind(TYPES.LogLevel).toConstantValue(LogLevel.warn);
     rebind(ManhattanEdgeRouter).to(CustomRouter).inSingletonScope();
 
+
     const context = { bind, unbind, isBound, rebind };
+    
+    bind(UpdateLayoutActionHandler).toSelf().inSingletonScope();
+    bind('updateLayout').toService(UpdateLayoutActionHandler);
+    configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
+
+
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
