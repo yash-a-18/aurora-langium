@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
-import { globalAuroraLayoutConfigurator } from '../language/aurora-language-utils.js';
-import { UPDATE_LAYOUT_ACTION_KIND, UpdateLayoutAction } from '../../shared/utils.js';
+import { getCurrentLayout, setCurrentLayout, UPDATE_LAYOUT_ACTION_KIND, UpdateLayoutAction } from '../../shared/utils.js';
+import { createAuroraServices } from '../language/aurora-module.js';
+import { NodeFileSystem } from 'langium/node';
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
@@ -39,21 +40,19 @@ export function activate(context: vscode.ExtensionContext): void {
                 
                 quickPick.onDidChangeSelection(selection => {
                     if (selection && selection.length > 0) {
-                        // 1. Update global layout choice (so that it is accessible in aurora-module)
-                        globalAuroraLayoutConfigurator.diagramLayout = selection[0].label.toLowerCase();
+                        setCurrentLayout(selection[0].label.toLowerCase())
+                        console.log("From main: ",getCurrentLayout())
+                        createAuroraServices(NodeFileSystem)
                     }
                 });
                 
                 quickPick.show();
                 
                 quickPick.onDidAccept(() => {
-                    console.log('QUICKPICK ITEM ACCEPTED')
-                    // 2. Fire message containing the diagram identifier? and new layout
-                    const layout = globalAuroraLayoutConfigurator.diagramLayout;
 
                     const action: UpdateLayoutAction = {
                         kind: UPDATE_LAYOUT_ACTION_KIND,
-                        layout
+                        layout: getCurrentLayout()
                     };
 
                     langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);                  

@@ -7,7 +7,8 @@ import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
-import { globalAuroraLayoutConfigurator } from './aurora-language-utils.js';
+import { AuroraLayoutConfigurator } from './layout-config.js';
+import { getCurrentLayout } from '../../shared/utils.js';
 
 
 /**
@@ -50,9 +51,14 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
     layout: {
         ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
         ElementFilter: () => new DefaultElementFilter,
-        LayoutConfigurator: () => globalAuroraLayoutConfigurator,
-    },
+        LayoutConfigurator: () => createLayoutConfig(),
+    }
 };
+
+function createLayoutConfig() {
+    console.log("getting current : ",getCurrentLayout())
+    return new AuroraLayoutConfigurator(getCurrentLayout())
+}
 
 /**
  * Create the full set of services required by Langium.
@@ -84,6 +90,7 @@ export function createAuroraServices(context: DefaultSharedModuleContext): {
         AuroraGeneratedModule,
         AuroraModule
     );
+    console.log("From create aurora services: ",Aurora.layout.LayoutConfigurator);
     shared.ServiceRegistry.register(Aurora);
     registerValidationChecks(Aurora);
     if (!context.connection) {
