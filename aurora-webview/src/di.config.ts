@@ -22,7 +22,6 @@ import { PolylineArrowEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
 
 
-
 const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     
 
@@ -33,10 +32,10 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
 
     const context = { bind, unbind, isBound, rebind };
     
+    
     bind(UpdateLayoutActionHandler).toSelf().inSingletonScope();
     bind('updateLayout').toService(UpdateLayoutActionHandler);
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
-
 
 
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {

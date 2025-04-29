@@ -22,7 +22,7 @@ export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         return {
             "elk.algorithm": this.diagramLayout, 
-            'org.eclipse.elk.stress.desiredEdgeLength': '200.0',
+            'org.eclipse.elk.stress.desiredEdgeLength': '100.0',
         };
     }
 
