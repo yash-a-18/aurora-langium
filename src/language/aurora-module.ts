@@ -7,8 +7,7 @@ import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
-import { AuroraLayoutConfigurator } from './layout-config.js';
-import { getCurrentLayout } from '../../shared/utils.js';
+import { AuroraLayoutConfigurator, getCurrentLayout } from '../../shared/utils.js';
 
 
 /**

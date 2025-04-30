@@ -2,8 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
 import { getCurrentLayout, setCurrentLayout, UPDATE_LAYOUT_ACTION_KIND, UpdateLayoutAction } from '../../shared/utils.js';
-import { createAuroraServices } from '../language/aurora-module.js';
-import { NodeFileSystem } from 'langium/node';
+
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
@@ -41,8 +40,6 @@ export function activate(context: vscode.ExtensionContext): void {
                 quickPick.onDidChangeSelection(selection => {
                     if (selection && selection.length > 0) {
                         setCurrentLayout(selection[0].label.toLowerCase())
-                        console.log("From main: ",getCurrentLayout())
-                        createAuroraServices(NodeFileSystem)
                     }
                 });
                 
@@ -50,12 +47,12 @@ export function activate(context: vscode.ExtensionContext): void {
                 
                 quickPick.onDidAccept(() => {
 
-                    const action: UpdateLayoutAction = {
-                        kind: UPDATE_LAYOUT_ACTION_KIND,
-                        layout: getCurrentLayout()
-                    };
-
-                    langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);                  
+                        const action: UpdateLayoutAction = {
+                            kind: UPDATE_LAYOUT_ACTION_KIND,
+                            layout: getCurrentLayout(),
+                        };    
+                        langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
+                                 
 
                     quickPick.dispose();
                 });

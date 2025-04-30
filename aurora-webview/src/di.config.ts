@@ -20,7 +20,9 @@ import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
-
+import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
+import ElkConstructor  from 'elkjs/lib/elk.bundled'
+const shared = require('../../shared/utils');
 
 const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     
@@ -36,6 +38,20 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(UpdateLayoutActionHandler).toSelf().inSingletonScope();
     bind('updateLayout').toService(UpdateLayoutActionHandler);
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
+    
+    const elkFactory: ElkFactory = () => new ElkConstructor({
+        algorithms: ['layered', 'stress', 'mrtree', 'radial', 'force', 'disco']
+    });
+    bind(ElkFactory).toConstantValue(elkFactory);
+
+    bind(DefaultElementFilter).toSelf().inSingletonScope(); 
+    bind(TYPES.IModelLayoutEngine).toDynamicValue(() =>
+        new ElkLayoutEngine(
+            elkFactory,
+            new DefaultElementFilter(),
+            new shared.AuroraLayoutConfigurator(shared.getCurrentLayout())
+        )
+    ).inSingletonScope();
 
 
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
