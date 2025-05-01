@@ -14,19 +14,24 @@ export class UpdateLayoutActionHandler implements IActionHandler {
 
     handle(action: Action): void {
         if (this.layoutEngine) {
-            console.log('Layout Engine Detected: ', this.layoutEngine);
+            console.log('Current Layout Engine Detected: ', this.layoutEngine);
+            const updatedLayout = (action as any).layout
+            
+            console.log('Updating Engine to: ', updatedLayout)
+            shared.setCurrentLayout(updatedLayout)
 
+            console.log('Detecting Updated Layout Engine: ', this.layoutEngine)
 
             const model = this.modelSource.model;
             const layoutResult = this.layoutEngine.layout(model);
+
+            console.log('Detecting Layout Result: ', layoutResult)
             
             if (layoutResult instanceof Promise) {
                 layoutResult
                     .then((newModel: SModelRoot) => {
-                        this.modelSource.actionDispatcher.dispatch(SetModelAction.create(newModel))
-                        
+                        this.modelSource.actionDispatcher.dispatch(SetModelAction.create(newModel)).then(() => console.log('Model updated!'))  
                     })
-                    .then(() => console.log('Model updated!'))
                     .catch((err: Error) => {
                         console.error('Layout computation failed:', err);
                     });

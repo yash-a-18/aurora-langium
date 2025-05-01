@@ -24,6 +24,16 @@ import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
 const shared = require('../../shared/utils');
 
+export const elkFactory: ElkFactory = () => new ElkConstructor({
+    algorithms: ['layered', 'stress', 'mrtree', 'radial', 'force', 'disco']
+});
+
+export var globalLayoutEngine = new ElkLayoutEngine(
+                                        elkFactory,
+                                        new DefaultElementFilter(),
+                                        new shared.AuroraLayoutConfigurator()
+                                    )
+
 const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     
 
@@ -39,19 +49,11 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind('updateLayout').toService(UpdateLayoutActionHandler);
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
     
-    const elkFactory: ElkFactory = () => new ElkConstructor({
-        algorithms: ['layered', 'stress', 'mrtree', 'radial', 'force', 'disco']
-    });
+    
     bind(ElkFactory).toConstantValue(elkFactory);
 
     bind(DefaultElementFilter).toSelf().inSingletonScope(); 
-    bind(TYPES.IModelLayoutEngine).toDynamicValue(() =>
-        new ElkLayoutEngine(
-            elkFactory,
-            new DefaultElementFilter(),
-            new shared.AuroraLayoutConfigurator(shared.getCurrentLayout())
-        )
-    ).inSingletonScope();
+    bind(TYPES.IModelLayoutEngine).toDynamicValue(() => globalLayoutEngine).inSingletonScope();
 
 
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {

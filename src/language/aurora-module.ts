@@ -56,7 +56,7 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
 
 function createLayoutConfig() {
     console.log("getting current : ",getCurrentLayout())
-    return new AuroraLayoutConfigurator(getCurrentLayout())
+    return new AuroraLayoutConfigurator()
 }
 
 /**

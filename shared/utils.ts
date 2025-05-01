@@ -21,25 +21,10 @@ export function getCurrentLayout(): string {
 
 export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
 
-    private layoutAlgorithm!: string;
-
-    constructor(alg: string) {
-        super()
-        this.layoutAlgorithm = alg 
-    }
-    
-    set diagramLayout(alg: string) {
-        this.layoutAlgorithm = alg
-    }
-
-    get diagramLayout() {
-        return this.layoutAlgorithm
-    }
-
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         // console.log("Layout:", this.layoutAlgorithm)
         return {
-            "elk.algorithm": this.layoutAlgorithm, 
+            "elk.algorithm": getCurrentLayout(), 
             'org.eclipse.elk.stress.desiredEdgeLength': '100.0',
         };
     }
