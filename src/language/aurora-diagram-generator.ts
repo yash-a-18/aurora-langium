@@ -1,7 +1,7 @@
-import { GeneratorContext, LangiumDiagramGenerator } from 'langium-sprotty';
+import { GeneratorContext, IdCache, LangiumDiagramGenerator } from 'langium-sprotty';
 import { SEdge, SLabel, SModelRoot, SModelElement, SNode } from 'sprotty-protocol';
-import { AstNode, AstUtils } from 'langium';
-import { IssueCoordinate, Issues, NamedGroupOrder, NL_STATEMENT, OrderCoordinate, Orders, PCM } from './generated/ast.js';
+import { AstNode, AstUtils, Reference } from 'langium';
+import { IssueCoordinate, Issues, NamedGroupOrder, NL_STATEMENT, OrderCoordinate, Orders, PCM, ReferenceCoordinate } from './generated/ast.js';
 
 var ngoFilter: string[] = []
 export function clearNGOFilter(): void  {ngoFilter = []}
@@ -35,8 +35,8 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
                 ...oc.map(x=> this.generateOC(x, args)).filter(Boolean),
                 ...nar.map(x=> this.generateNar(x,args)).filter(Boolean),
                 ...nar.map(x=> this.generateNLEdge(x, args)).filter(Boolean),
-                ...oc.map(x=> this.generateEdge(x, args)).filter(Boolean),
-                ...ic.filter(i => i.refs?.length > 0).map(x=> this.generateEdge(x, args)).filter(Boolean)
+                ...oc.flatMap(x=> this.generateEdges(x, args)).filter(Boolean),
+                ...ic.filter(i => i.refs?.length > 0).flatMap(x=> this.generateEdges(x, args)).filter(Boolean)
             ] as SModelElement[]
         };
     }
@@ -87,16 +87,23 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
     }
     // TODO, change this from ic -> (to, from )
     // And capture the ~ for the negative relationship
-    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge | undefined {
+    protected generateEdges(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge[] {
         const sourceId = idCache.getId(ic);
+        return ic.refs.map(r => {
+            return this.generateEdge(ic, sourceId, r, idCache )
+        }).filter(Boolean) as SEdge[]
+    }
+
+
+    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, sourceId: string | undefined, ref: Reference<ReferenceCoordinate>, idCache: IdCache<AstNode>): SEdge | undefined {
         
-        // Check if refs array exists and has elements
-        if (!ic.refs || ic.refs.length === 0 || !ic.refs[0].ref) {
+        // Check if ref exists
+        if (!ref.ref) {
             console.warn(`No valid reference found for ${ic.name}`);
             return undefined;
         }
 
-        const targetId = idCache.getId(ic.refs[0].ref);
+        const targetId = idCache.getId(ref.ref);
         
         // Check if both IDs are valid
         if (!sourceId || !targetId) {
@@ -104,7 +111,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
             return undefined;
         }
 
-        const edgeId = idCache.uniqueId(`${sourceId}:${ic.refs[0].$refNode?.text ?? ''}:${targetId}`, ic);
+        const edgeId = idCache.uniqueId(`${sourceId}:${ref.$refNode?.text ?? ''}:${targetId}`, ic);
         
         return {
             type: 'edge',

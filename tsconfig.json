@@ -13,9 +13,10 @@
         "declarationDir": "dist/types",
         "esModuleInterop": true
     },
-    "include": [
+    "include": [    
         "src/**/*.ts",
-        "test/**/*.ts"
+        "test/**/*.ts",
+        "shared"
     ],
     "exclude": [
         "out",

@@ -5,12 +5,13 @@ import { AuroraValidator, registerValidationChecks } from './aurora-validator.js
 import { AuroraScopeComputation } from './aurora-scope.js';
 import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
-import { AuroraLayoutConfigurator } from './layout-config.js';
-import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator } from 'sprotty-elk';
+import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
 import { AuroraHoverProvider } from './hover-provider.js';
 // import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
 import { AuroraCommandHandler } from './aurora-commands.js';
+import { AuroraLayoutConfigurator, getCurrentLayout } from '../../shared/utils.js';
+
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -32,6 +33,7 @@ export type AuroraAddedServices = {
  */
 export type AuroraServices = LangiumSprottyServices & LangiumServices & AuroraAddedServices
 
+
 /**
  * Dependency injection module that overrides Langium default services and contributes the
  * declared custom services. The Langium defaults can be partially specified to override only
@@ -51,13 +53,18 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
     layout: {
         ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
         ElementFilter: () => new DefaultElementFilter,
-        LayoutConfigurator: () => new AuroraLayoutConfigurator,
+        LayoutConfigurator: () => createLayoutConfig(),
     },
     lsp: {
         // SemanticTokenProvider: (services) => new AuroraSemanticTokenProvider(services),
         HoverProvider: (services) => new AuroraHoverProvider(services)
     }
 };
+
+function createLayoutConfig() {
+    console.log("getting current : ",getCurrentLayout())
+    return new AuroraLayoutConfigurator()
+}
 
 /**
  * Create the full set of services required by Langium.
@@ -89,6 +96,7 @@ export function createAuroraServices(context: DefaultSharedModuleContext): {
         AuroraGeneratedModule,
         AuroraModule
     );
+    console.log("From create aurora services: ",Aurora.layout.LayoutConfigurator);
     shared.ServiceRegistry.register(Aurora);
     registerValidationChecks(Aurora);
     // Register the ExecuteCommandHandler via the LSP connection
