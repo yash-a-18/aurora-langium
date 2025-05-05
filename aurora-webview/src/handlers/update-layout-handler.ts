@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { TYPES, type IActionHandler } from 'sprotty';
-import { IModelLayoutEngine, SetModelAction, SModelRoot, type Action } from 'sprotty-protocol';
+import { cloneModel, IModelLayoutEngine, SetModelAction, SModelRoot, type Action } from 'sprotty-protocol';
 import { VscodeDiagramServer } from 'sprotty-vscode-webview';
 const shared = require('../../../shared/utils');
 
@@ -23,7 +23,10 @@ export class UpdateLayoutActionHandler implements IActionHandler {
             console.log('Detecting Updated Layout Engine: ', this.layoutEngine)
 
             const model = this.modelSource.model;
-            const layoutResult = this.layoutEngine.layout(model);
+            const clone = cloneModel(model)
+            clone.id = clone.id + '_' + clone.revision /* Need to change ID to trigger full re-rendering */
+            
+            const layoutResult = this.layoutEngine.layout(clone);
 
             console.log('Detecting Layout Result: ', layoutResult)
             

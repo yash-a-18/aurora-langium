@@ -9,7 +9,7 @@ export interface UpdateLayoutAction extends Action {
     layout: string;
 }
 
-export var currentLayout = 'layered'
+export var currentLayout = 'stress'
 
 export function setCurrentLayout(alg: string): void {
     currentLayout = alg
@@ -22,10 +22,9 @@ export function getCurrentLayout(): string {
 export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
 
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
-        // console.log("Layout:", this.layoutAlgorithm)
         return {
             "elk.algorithm": getCurrentLayout(), 
-            'org.eclipse.elk.stress.desiredEdgeLength': '100.0',
+            'org.eclipse.elk.stress.desiredEdgeLength': '100'
         };
     }
 
