@@ -9,7 +9,7 @@ import { AuroraLayoutConfigurator } from './layout-config.js';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator } from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
 import { AuroraHoverProvider } from './hover-provider.js';
-import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
+// import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
 import { AuroraCommandHandler } from './aurora-commands.js';
 
 /**
@@ -54,7 +54,7 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
         LayoutConfigurator: () => new AuroraLayoutConfigurator,
     },
     lsp: {
-        SemanticTokenProvider: (services) => new AuroraSemanticTokenProvider(services),
+        // SemanticTokenProvider: (services) => new AuroraSemanticTokenProvider(services),
         HoverProvider: (services) => new AuroraHoverProvider(services)
     }
 };
