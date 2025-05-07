@@ -2,11 +2,6 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "outDir": "dist/cjs",
-        "rootDir": "." // Specify the root directory for source files
-    },
-    "include": [
-        "src/**/*.ts", // Ensure all source files are included
-        "shared/**/*.ts" // Include shared directory
-    ]
+        "outDir": "dist/cjs"
+    }
 } 
