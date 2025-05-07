@@ -28,7 +28,9 @@ const plugins = [{
 
 // Build for CommonJS
 const cjsContext = await esbuild.context({
-    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts', 'src/cli/index.ts', 'src/extension/src/parser/parser.ts'],
+    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts', 'src/cli/index.ts', 'src/extension/src/parser/parser.ts',
+        'src/language/aurora-module.ts'
+    ],
     outdir: 'dist/cjs', // Output directory for CommonJS
     bundle: true,
     target: "ES2017",
@@ -46,7 +48,9 @@ const cjsContext = await esbuild.context({
 
 // Build for ES Module
 const esmContext = await esbuild.context({
-    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts',  'src/cli/main.ts', 'src/extension/src/parser/parser.ts'],
+    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts',  'src/cli/main.ts', 'src/extension/src/parser/parser.ts',
+        'src/language/aurora-module.ts'
+    ],
     outdir: 'dist/esm', // Output directory for ES Module
     bundle: true,
     target: "ES2017",
