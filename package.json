@@ -1,7 +1,7 @@
 {
     "name": "aurora-langium",
     "description": "It contains the DSL named Aurora",
-    "version": "0.2.9",
+    "version": "0.2.10",
     "files": [
         "bin",
         "out",
@@ -17,6 +17,11 @@
             "import": "./dist/cjs/extension/langclientconfig.cjs",
             "require": "./dist/cjs/extension/langclientconfig.cjs",
             "types": "./dist/types/src/extension/langclientconfig.d.ts"
+        },
+        "./dist/types/src/extension/src/parser/parser": {
+            "import": "./dist/cjs/extension/src/parser/parser.js",
+            "require": "./dist/cjs/extension/src/parser/parser.js",
+            "types": "./dist/types/src/extension/src/parser/parser.d.ts"
         },
         ".": {
             "import": "./dist/cjs/index.cjs",
