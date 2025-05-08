@@ -10,7 +10,7 @@ import ElkConstructor from 'elkjs/lib/elk.bundled.js';
 import { AuroraHoverProvider } from './hover-provider.js';
 // import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
 import { AuroraCommandHandler } from './aurora-commands.js';
-import { AuroraLayoutConfigurator, getCurrentLayout } from '../../shared/utils.js';
+import { AuroraLayoutConfigurator } from '../../shared/utils.js';
 
 
 /**
@@ -62,7 +62,6 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
 };
 
 function createLayoutConfig() {
-    console.log("getting current : ",getCurrentLayout())
     return new AuroraLayoutConfigurator()
 }
 
@@ -96,7 +95,6 @@ export function createAuroraServices(context: DefaultSharedModuleContext): {
         AuroraGeneratedModule,
         AuroraModule
     );
-    console.log("From create aurora services: ",Aurora.layout.LayoutConfigurator);
     shared.ServiceRegistry.register(Aurora);
     registerValidationChecks(Aurora);
     // Register the ExecuteCommandHandler via the LSP connection

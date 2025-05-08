@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { TYPES, type IActionHandler } from 'sprotty';
-import { cloneModel, IModelLayoutEngine, SetModelAction, SModelRoot, type Action } from 'sprotty-protocol';
+import { cloneModel, IModelLayoutEngine, SModelRoot, UpdateModelAction, type Action } from 'sprotty-protocol';
 import { VscodeDiagramServer } from 'sprotty-vscode-webview';
 const shared = require('../../../shared/utils');
 
@@ -33,13 +33,13 @@ export class UpdateLayoutActionHandler implements IActionHandler {
             if (layoutResult instanceof Promise) {
                 layoutResult
                     .then((newModel: SModelRoot) => {
-                        this.modelSource.actionDispatcher.dispatch(SetModelAction.create(newModel)).then(() => console.log('Model updated!'))  
+                        this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(newModel)).then(() => console.log('Model updated!'))  
                     })
                     .catch((err: Error) => {
                         console.error('Layout computation failed:', err);
                     });
             } else {
-                this.modelSource.actionDispatcher.dispatch(SetModelAction.create(layoutResult));
+                this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(layoutResult));
             }
         }
         else console.log('NO LAYOUT ENGINE!!!!! ', this.layoutEngine)
