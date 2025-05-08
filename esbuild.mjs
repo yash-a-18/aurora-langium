@@ -28,7 +28,10 @@ const plugins = [{
 
 // Build for CommonJS
 const cjsContext = await esbuild.context({
-    entryPoints: ['src/extension/main.ts', 'src/language/main.ts','src/extension/langclientconfig.ts'],
+    entryPoints: ['src/extension/main.ts', 
+                  'src/language/main.ts',
+                  'src/extension/langclientconfig.ts',
+                  'src/extension/src/commands/toggle-diagram-layout-command.ts'],
     outdir: 'dist/cjs', // Output directory for CommonJS
     bundle: true,
     target: "ES2017",

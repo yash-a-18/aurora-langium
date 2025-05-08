@@ -1,7 +1,7 @@
 {
     "name": "aurora-langium",
     "description": "It contains the DSL named Aurora",
-    "version": "0.2.0",
+    "version": "0.2.15",
     "files": [
         "bin",
         "out",
@@ -26,6 +26,11 @@
             "import": "./dist/cjs/extension/main.cjs",
             "require": "./dist/cjs/extension/main.cjs",
             "types": "./dist/types/src/extension/main.d.ts"
+        },
+        "./dist/types/src/extension/src/commands/toggle-diagram-layout-command": {
+            "import": "./dist/cjs/extension/src/commands/toggle-diagram-layout-command.cjs",
+            "require": "./dist/cjs/extension/src/commands/toggle-diagram-layout-command.cjs",
+            "types": "./dist/types/src/extension/src/commands/toggle-diagram-layout-command.d.ts"
         }
     },
     "types": "dist/types/index.d.ts",
