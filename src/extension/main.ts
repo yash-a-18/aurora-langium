@@ -24,11 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showTextDocument(d.uri, { preview: false });
             })
     })
-    
-
-    // var container: Container | undefined = auroraSprottyStarter.currentAuroraContainer
-    // const modelSource = container?.get<LocalModelSource>(TYPES.ModelSource);
-    
+        
     // adding toggle command TO DO: consolidate all commands in a separate folder
         context.subscriptions.push(
             vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => {
