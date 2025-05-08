@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
-import { getCurrentLayout, setCurrentLayout, UPDATE_LAYOUT_ACTION_KIND, UpdateLayoutAction } from '../../shared/utils.js';
+import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
 
 
 // This function is called when the extension is activated.
@@ -24,35 +24,8 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showTextDocument(d.uri, { preview: false });
             })
     })
-        
-    // adding toggle command TO DO: consolidate all commands in a separate folder
         context.subscriptions.push(
-            vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => {
-                let quickPick = vscode.window.createQuickPick();
-                quickPick.placeholder = 'Choose a layout for your diagram...';
-                let layoutOptions = ['Stress', 'Layered', 'MrTree'];
-                quickPick.items = layoutOptions.map(x => { return { label: x }; });
-                
-                quickPick.onDidChangeSelection(selection => {
-                    if (selection && selection.length > 0) {
-                        setCurrentLayout(selection[0].label.toLowerCase())
-                    }
-                });
-                
-                quickPick.show();
-                
-                quickPick.onDidAccept(() => {
-
-                        const action: UpdateLayoutAction = {
-                            kind: UPDATE_LAYOUT_ACTION_KIND,
-                            layout: getCurrentLayout(),
-                        };    
-                        langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
-                                 
-
-                    quickPick.dispose();
-                });
-            })
+            vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => toggleDiagramLayout(langConfig))
         );
 }
 
