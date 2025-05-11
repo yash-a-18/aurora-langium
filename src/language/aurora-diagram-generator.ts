@@ -14,7 +14,7 @@ function listOfNarratives(a: AstNode): NL_STATEMENT[] {
       .filter((i) => i.$type == "NL_STATEMENT") as NL_STATEMENT[];
 }
 
-function extractQURefsArray(qurcList: QUReferenceCoordinate[]): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
+export function extractQURefsArray(qurcList: QUReferenceCoordinate[]): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
     const qu: string[] = [];
     const refs: Reference<ReferenceCoordinate>[] = [];
 
