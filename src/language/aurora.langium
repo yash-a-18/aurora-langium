@@ -25,7 +25,7 @@ namedGroups+=NamedGroupClinical*;
 NamedGroupClinical:
     name=ID_WITH_COLON
     timestamp=TimeStamp ?
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     narrative+=NL_STATEMENT *
     coord+=(ClinicalCoordinate | ClinicalValue  )*
 ;
@@ -34,7 +34,7 @@ ClinicalCoordinate:
     qu+=QU *
     timestamp=TimeStamp ?
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     narrative+=NL_STATEMENT *
 ;
 
@@ -46,7 +46,7 @@ ClinicalValue:
     values+=SingleValueUnit
     (',' values+=SingleValueUnit  )*
     ']'
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     narrative+=NL_STATEMENT *
 ;
 
@@ -74,7 +74,7 @@ IssueCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     (':' snomed=Snomed)?
     ('from' mods+=[MODULE:ID] (',' mods+=[MODULE:ID])*
             ('with' temps+=[TEMPLATE: ID] (',' temps+=[TEMPLATE:ID])*)? )?
@@ -82,6 +82,8 @@ IssueCoordinate:
 ;
 
 ReferenceCoordinate: (IssueCoordinate | OrderCoordinate | ClinicalCoordinate);
+QUReferenceCoordinate:
+    ('('qu += QU* refs+=[ReferenceCoordinate:ID] (',' qu += QU* refs+=[ReferenceCoordinate:ID])* ')');
 
 Orders:
 'Orders:'
@@ -92,7 +94,7 @@ NamedGroupOrder:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID_WITH_COLON
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     narrative+=NL_STATEMENT *
     (orders+=(OrderCoordinate | MutuallyExclusive))*;
 
@@ -100,7 +102,7 @@ OrderCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc += QUReferenceCoordinate?
     narrative+= NL_STATEMENT* ;
 
 MutuallyExclusive:
@@ -129,4 +131,4 @@ terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;
 // hidden terminal WS: /\s+/;
-terminal QUTERMINAL returns string:('?' | '!' | '*' | '~' );
+terminal QUTERMINAL returns string:('?' | '!' | '~');
