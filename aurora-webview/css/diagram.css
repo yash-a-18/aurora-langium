@@ -133,16 +133,40 @@
     fill:none;
     stroke: #D44D37;
     stroke-width: 2px;
-}
-
-.sprotty-edge-arrow {
-    fill:var(--vscode-editorActiveLineNumber-foreground);
+    stroke-dasharray: 5, 5;
 }
 
 .sprotty-negative-edge-arrow {
     fill: #D44D37;
     stroke: #D44D37;
 }
+
+.sprotty-draft-edge {
+    fill:none;
+    stroke: #ddab61;
+    stroke-width: 2px;
+    stroke-dasharray: 5, 5;
+}
+
+.sprotty-draft-edge-arrow {
+    fill: #ddab61;
+    stroke: #ddab61;
+}
+
+.sprotty-urgent-edge {
+    fill:none;
+    stroke: #D44D37;
+    stroke-width: 2px;
+}
+
+.sprotty-urgent-edge-arrow {
+    fill: #D44D37;
+    stroke: #D44D37;
+}
+.sprotty-edge-arrow {
+    fill:var(--vscode-editorActiveLineNumber-foreground);
+}
+
 path.sprotty-edge.dashed {
     stroke: #D44D37;
     stroke-width: 4px;

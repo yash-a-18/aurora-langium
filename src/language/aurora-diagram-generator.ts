@@ -14,6 +14,22 @@ function listOfNarratives(a: AstNode): NL_STATEMENT[] {
       .filter((i) => i.$type == "NL_STATEMENT") as NL_STATEMENT[];
 }
 
+function getEdgeTypeFromQuery(query?: string): string {
+    if (!query || query.trim().length === 0) return 'edge';
+
+    const firstChar = query.trim().charAt(0);
+    switch (firstChar) {
+        case '~':
+            return 'edge:negative';
+        case '?':
+            return 'edge:draft';
+        case '!':
+            return 'edge:urgent';
+        default:
+            return 'edge';
+    }
+}
+
 export function extractQURefsArray(qurc: QuReferences | undefined): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
     const qu: string[] = [];
     const refs: Reference<ReferenceCoordinate>[] = [];
@@ -104,17 +120,19 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         } as SNode;
     }
     // TODO, change this from ic -> (to, from )
-    protected generateEdges(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge[] {
+    protected generateEdges(ic: IssueCoordinate | OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge[] {
         const sourceId = idCache.getId(ic);
         const edges: SEdge[] = [];
 
-        if (ic.qurc) { // Ensure ic.qurc is not undefined
-            for (const qurc of Array.isArray(ic.qurc) ? ic.qurc : [ic.qurc]) { // Ensure qurc is iterable
+        if (ic.qurc) {
+            const qurcs = Array.isArray(ic.qurc) ? ic.qurc : [ic.qurc];
+            for (const qurc of qurcs) {
                 for (const qref of qurc.quRefs ?? []) {
-                    const hasQU = qref.qu?.length > 0;
-                    const type = hasQU ? 'edge:negative' : 'edge';
+                    const quList = qref.qu ?? [];
+                    const edgeType = quList.length > 0 ? getEdgeTypeFromQuery(quList[0].query) : 'edge';
+
                     if (qref.ref) {
-                        const edge = this.generateEdge(ic, sourceId, qref.ref, idCache, type);
+                        const edge = this.generateEdge(ic, sourceId, qref.ref, idCache, edgeType);
                         if (edge) {
                             edges.push(edge);
                         }
@@ -122,6 +140,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
                 }
             }
         }
+
         return edges;
     }
 
