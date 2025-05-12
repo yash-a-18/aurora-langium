@@ -104,16 +104,26 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         } as SNode;
     }
     // TODO, change this from ic -> (to, from )
-    // And capture the ~ for the negative relationship
     protected generateEdges(ic: IssueCoordinate|OrderCoordinate, { idCache }: GeneratorContext<PCM>): SEdge[] {
         const sourceId = idCache.getId(ic);
-        return extractQURefsArray(ic.qurc ?? []).refs.map((r: Reference<ReferenceCoordinate>) => {
-            return this.generateEdge(ic, sourceId, r, idCache )
-        }).filter(Boolean) as SEdge[]
+        const edges: SEdge[] = [];
+
+        for (const qurc of ic.qurc ?? []) {
+            for (const qref of qurc.quRefs ?? []) {
+                const hasQU = qref.qu?.length > 0;
+                const type = hasQU ? 'edge:negative' : 'edge';
+                if (qref.ref) {
+                    const edge = this.generateEdge(ic, sourceId, qref.ref, idCache, type);
+                    if (edge) {
+                        edges.push(edge);
+                    }
+                }
+            }
+        }
+        return edges;
     }
 
-
-    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, sourceId: string | undefined, ref: Reference<ReferenceCoordinate>, idCache: IdCache<AstNode>): SEdge | undefined {
+    protected generateEdge(ic: IssueCoordinate|OrderCoordinate, sourceId: string | undefined, ref: Reference<ReferenceCoordinate>, idCache: IdCache<AstNode>, type: string): SEdge | undefined {
         
         // Check if ref exists
         if (!ref.ref) {
@@ -132,7 +142,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         const edgeId = idCache.uniqueId(`${sourceId}:${ref.$refNode?.text ?? ''}:${targetId}`, ic);
         
         return {
-            type: 'edge',
+            type: type,
             id: edgeId,
             sourceId: sourceId,
             targetId: targetId,

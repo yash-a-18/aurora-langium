@@ -141,6 +141,7 @@
 
 .sprotty-negative-edge-arrow {
     fill: #D44D37;
+    stroke: #D44D37;
 }
 path.sprotty-edge.dashed {
     stroke: #D44D37;

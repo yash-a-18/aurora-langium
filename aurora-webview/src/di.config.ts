@@ -17,8 +17,8 @@ import { NarrativeDraftNodeView,
     NarrativeExclamationNodeView, NarrativeNodeView, NarrativeTaskCompletedNodeView,NarrativeTaskNodeView,
     OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView} from './NodeViews'
 import { CustomRouter } from './custom-edge-router';
-import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
-import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { CreateTransitionPort, NegativeEdge, StatesEdge, StatesNode } from './model';
+import { PolylineArrowEdgeView, PolylineArrowNegativeEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
@@ -79,6 +79,7 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
         enable: [editLabelFeature]
     });
     configureModelElement(context, 'edge', StatesEdge, PolylineArrowEdgeView);
+    configureModelElement(context, 'edge:negative', NegativeEdge, PolylineArrowNegativeEdgeView);
     configureModelElement(context, 'html', HtmlRootImpl, HtmlRootView);
     configureModelElement(context, 'pre-rendered', PreRenderedElementImpl, PreRenderedView);
     configureModelElement(context, 'palette', SModelRootImpl, HtmlRootView);
