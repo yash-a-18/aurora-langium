@@ -25,7 +25,7 @@ namedGroups+=NamedGroupClinical*;
 NamedGroupClinical:
     name=ID_WITH_COLON
     timestamp=TimeStamp ?
-    qurc += QuReferences?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
     coord+=(ClinicalCoordinate | ClinicalValue  )*
 ;
@@ -34,7 +34,7 @@ ClinicalCoordinate:
     qu+=QU *
     timestamp=TimeStamp ?
     name=ID
-    qurc += QuReferences?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
 
@@ -46,7 +46,7 @@ ClinicalValue:
     values+=SingleValueUnit
     (',' values+=SingleValueUnit  )*
     ']'
-    qurc += QuReferences?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
 
@@ -74,7 +74,7 @@ IssueCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    qurc += QuReferences?
+    qurc = QuReferences?
     (':' snomed=Snomed)?
     ('from' mods+=[MODULE:ID] (',' mods+=[MODULE:ID])*
             ('with' temps+=[TEMPLATE: ID] (',' temps+=[TEMPLATE:ID])*)? )?
@@ -99,7 +99,7 @@ NamedGroupOrder:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID_WITH_COLON
-    qurc += QuReferences?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
     (orders+=(OrderCoordinate | MutuallyExclusive))*;
 
@@ -107,7 +107,7 @@ OrderCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    qurc += QuReferences?
+    qurc = QuReferences?
     narrative+= NL_STATEMENT* ;
 
 MutuallyExclusive:

@@ -14,11 +14,11 @@ function listOfNarratives(a: AstNode): NL_STATEMENT[] {
       .filter((i) => i.$type == "NL_STATEMENT") as NL_STATEMENT[];
 }
 
-export function extractQURefsArray(qurcList: QuReferences[]): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
+export function extractQURefsArray(qurc: QuReferences | undefined): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
     const qu: string[] = [];
     const refs: Reference<ReferenceCoordinate>[] = [];
 
-    for (const qurc of qurcList ?? []) {
+    if (qurc) {
         for (const qref of qurc.quRefs ?? []) {
             for (const q of qref.qu ?? []) {
                 qu.push(q.query);
@@ -54,7 +54,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
                 ...nar.map(x=> this.generateNar(x,args)).filter(Boolean),
                 ...nar.map(x=> this.generateNLEdge(x, args)).filter(Boolean),
                 ...oc.flatMap(x=> this.generateEdges(x, args)).filter(Boolean),
-                ...ic.filter(i => extractQURefsArray(i.qurc ?? []).refs.length > 0).flatMap(x => this.generateEdges(x, args)).filter(Boolean)
+                ...ic.filter(i => extractQURefsArray(i.qurc).refs.length > 0).flatMap(x => this.generateEdges(x, args)).filter(Boolean)
             ] as SModelElement[]
         };
     }
@@ -91,7 +91,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
     }
     protected generateOC(oc: OrderCoordinate, { idCache }: GeneratorContext<PCM>): SModelElement {
         var i = "node:oc"
-        if (extractQURefsArray(oc.qurc ?? []).refs.length == 0){
+        if (extractQURefsArray(oc.qurc).refs.length == 0){
             i = "node:ocorphan"
         }
         const nodeId = idCache.uniqueId(oc.name, oc);
@@ -108,14 +108,16 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         const sourceId = idCache.getId(ic);
         const edges: SEdge[] = [];
 
-        for (const qurc of ic.qurc ?? []) {
-            for (const qref of qurc.quRefs ?? []) {
-                const hasQU = qref.qu?.length > 0;
-                const type = hasQU ? 'edge:negative' : 'edge';
-                if (qref.ref) {
-                    const edge = this.generateEdge(ic, sourceId, qref.ref, idCache, type);
-                    if (edge) {
-                        edges.push(edge);
+        if (ic.qurc) { // Ensure ic.qurc is not undefined
+            for (const qurc of Array.isArray(ic.qurc) ? ic.qurc : [ic.qurc]) { // Ensure qurc is iterable
+                for (const qref of qurc.quRefs ?? []) {
+                    const hasQU = qref.qu?.length > 0;
+                    const type = hasQU ? 'edge:negative' : 'edge';
+                    if (qref.ref) {
+                        const edge = this.generateEdge(ic, sourceId, qref.ref, idCache, type);
+                        if (edge) {
+                            edges.push(edge);
+                        }
                     }
                 }
             }
