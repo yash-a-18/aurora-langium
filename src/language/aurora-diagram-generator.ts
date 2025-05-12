@@ -1,7 +1,7 @@
 import { GeneratorContext, IdCache, LangiumDiagramGenerator } from 'langium-sprotty';
 import { SEdge, SLabel, SModelRoot, SModelElement, SNode } from 'sprotty-protocol';
 import { AstNode, AstUtils, Reference } from 'langium';
-import { IssueCoordinate, Issues, NamedGroupOrder, NL_STATEMENT, OrderCoordinate, Orders, PCM, ReferenceCoordinate, QUReferenceCoordinate } from './generated/ast.js';
+import { IssueCoordinate, Issues, NamedGroupOrder, NL_STATEMENT, OrderCoordinate, Orders, PCM, ReferenceCoordinate, QuReferences } from './generated/ast.js';
 
 var ngoFilter: string[] = []
 export function clearNGOFilter(): void  {ngoFilter = []}
@@ -14,19 +14,20 @@ function listOfNarratives(a: AstNode): NL_STATEMENT[] {
       .filter((i) => i.$type == "NL_STATEMENT") as NL_STATEMENT[];
 }
 
-export function extractQURefsArray(qurcList: QUReferenceCoordinate[]): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
+export function extractQURefsArray(qurcList: QuReferences[]): { qu: string[]; refs: Reference<ReferenceCoordinate>[] } {
     const qu: string[] = [];
     const refs: Reference<ReferenceCoordinate>[] = [];
 
     for (const qurc of qurcList ?? []) {
-        for (const q of qurc.qu ?? []) {
-            qu.push(q.query);
-        }
-        for (const r of qurc.refs ?? []) {
-            refs.push(r as Reference<ReferenceCoordinate>); // <- Explicit cast
+        for (const qref of qurc.quRefs ?? []) {
+            for (const q of qref.qu ?? []) {
+                qu.push(q.query);
+            }
+            if (qref.ref) {
+                refs.push(qref.ref as Reference<ReferenceCoordinate>);
+            }
         }
     }
-
     return { qu, refs };
 }
 
