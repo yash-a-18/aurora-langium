@@ -2,7 +2,10 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
 import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
-import { HIDE_NGOS_ACTION_KIND, HideNGOsAction } from '../../shared/utils.js';
+import { hideNGOs } from './src/commands/hide-ngos-command.js';
+import { createAuroraServices } from '../language/aurora-module.js';
+import { NodeFileSystem } from 'langium/node';
+import { parseFromText } from './src/parser/parser.js';
 
 
 // This function is called when the extension is activated.
@@ -32,13 +35,12 @@ export function activate(context: vscode.ExtensionContext): void {
 
         context.subscriptions.push(
             vscode.commands.registerCommand('filter.test', async () => {
-                const makeshiftFilter: string[] = ['semifowlers', 'NAS']
-                const action: HideNGOsAction = {
-                        kind: HIDE_NGOS_ACTION_KIND,
-                        ngoNames: makeshiftFilter,
-                };    
-                langConfig.webviewProvider?.findActiveWebview()?.sendAction(action); 
-                
+                const activeEditor = vscode.window.activeTextEditor
+                if(activeEditor) {
+                    const pcm = await parseFromText(createAuroraServices(NodeFileSystem).Aurora, 
+                                              activeEditor.document.getText())
+                    hideNGOs(pcm, langConfig)
+                }                
             })
         )
 }

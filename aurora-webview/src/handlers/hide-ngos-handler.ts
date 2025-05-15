@@ -14,13 +14,13 @@ export class HideNGOsActionHandler implements IActionHandler {
 
     handle(action: Action) {
         if (action.kind === shared.HIDE_NGOS_ACTION_KIND) {
-            const ngoNames = (action as any).ngoNames;
-            const updatedRoot = this.markNodesHidden(this.modelSource.model, ngoNames);
+            const ocNames = (action as any).ocNames;
+            const updatedRoot = this.markNodesHidden(this.modelSource.model, ocNames);
             this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(updatedRoot, {animate: false}));      
         }        
     }
 
-    private markNodesHidden(root: SModelRoot, nodeIdsToHide: string[]): SModelRoot {
+    private markNodesHidden(root: SModelRoot, idsToHide: string[]): SModelRoot {
         const updatedChildren: SModelElement[] = [];
 
         for (const element of root.children || []) {
@@ -28,13 +28,13 @@ export class HideNGOsActionHandler implements IActionHandler {
                 const source = (element as any).sourceId;
                 const target = (element as any).targetId;
 
-                if (nodeIdsToHide.includes(source) || nodeIdsToHide.includes(target)) {
+                if (idsToHide.includes(source) || idsToHide.includes(target)) {
                     continue; 
                 }
 
                 updatedChildren.push(element); 
             } else if (this.isNode(element)) {
-                const updatedNode = this.hideNode(element, nodeIdsToHide);
+                const updatedNode = this.hideNode(element, idsToHide);
                 updatedChildren.push(updatedNode);
             } else {
                 updatedChildren.push(element); 

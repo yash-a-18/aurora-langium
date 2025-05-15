@@ -48,5 +48,5 @@ export const HIDE_NGOS_ACTION_KIND = 'hideNGOs';
 
 export interface HideNGOsAction extends Action {
     kind: typeof HIDE_NGOS_ACTION_KIND;
-    ngoNames: string[];
+    ocNames: string[];
 }
