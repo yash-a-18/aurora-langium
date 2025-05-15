@@ -2,11 +2,13 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
 import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
+import { HIDE_NGOS_ACTION_KIND, HideNGOsAction } from '../../shared/utils.js';
 
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
     console.log("Hello Aurora Activation...")
+    
     // Register the focus command
     context.subscriptions.push(
         vscode.commands.registerCommand('aurora.focus', () => {
@@ -27,6 +29,18 @@ export function activate(context: vscode.ExtensionContext): void {
         context.subscriptions.push(
             vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => toggleDiagramLayout(langConfig))
         );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand('filter.test', async () => {
+                const makeshiftFilter: string[] = ['semifowlers', 'NAS']
+                const action: HideNGOsAction = {
+                        kind: HIDE_NGOS_ACTION_KIND,
+                        ngoNames: makeshiftFilter,
+                };    
+                langConfig.webviewProvider?.findActiveWebview()?.sendAction(action); 
+                
+            })
+        )
 }
 
 // This function is called when the extension is deactivated.

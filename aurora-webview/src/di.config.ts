@@ -15,13 +15,14 @@ import { DarkTextLabelView } from './LabelViews'
 
 import { NarrativeDraftNodeView,
     NarrativeExclamationNodeView, NarrativeNodeView, NarrativeTaskCompletedNodeView,NarrativeTaskNodeView,
-    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView} from './NodeViews'
+    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView, HiddenNodeView} from './NodeViews'
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
+import { HideNGOsActionHandler } from './handlers/hide-ngos-handler';
 const shared = require('../../shared/utils');
 
 export const elkFactory: ElkFactory = () => new ElkConstructor({
@@ -48,6 +49,10 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(UpdateLayoutActionHandler).toSelf().inSingletonScope();
     bind('updateLayout').toService(UpdateLayoutActionHandler);
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
+
+    bind(HideNGOsActionHandler).toSelf().inSingletonScope();
+    bind('hideNGOs').toService(HideNGOsActionHandler);
+    configureActionHandler(context, 'hideNGOs', HideNGOsActionHandler)
     
     
     bind(ElkFactory).toConstantValue(elkFactory);
@@ -55,11 +60,12 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(DefaultElementFilter).toSelf().inSingletonScope(); 
     bind(TYPES.IModelLayoutEngine).toDynamicValue(() => globalLayoutEngine).inSingletonScope();
 
-
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
+    
     configureModelElement(context, 'node', StatesNode, RectangularNodeView,{enable: [openFeature]});
+    configureModelElement(context, 'node:hidden', StatesNode, HiddenNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:ic', StatesNode, IssueCoordinateNodeView,{enable: [openFeature, alignFeature]});
     configureModelElement(context, 'node:nl', StatesNode, NarrativeNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:nldraft', StatesNode, NarrativeDraftNodeView,{enable: [openFeature]});
@@ -68,6 +74,7 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureModelElement(context, 'node:nltask', StatesNode, NarrativeTaskNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:oc', StatesNode, OrderCoordinateNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:ocorphan', StatesNode, OrderCoordinateOrphanNodeView,{enable: [openFeature]});
+
 
     configureModelElement(context, 'label', SLabelImpl, SLabelView, {
         enable: [editLabelFeature]

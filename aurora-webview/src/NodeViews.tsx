@@ -5,6 +5,12 @@ import { Hoverable, Selectable } from "sprotty-protocol";
 import { VNode } from "snabbdom";
 import { injectable } from 'inversify';
 
+@injectable()
+export class HiddenNodeView extends ShapeView {
+    render(node: Readonly<SShapeElementImpl & Hoverable & Selectable>, context: RenderingContext, args?: IViewArgs): VNode | undefined {
+        return undefined
+    }
+}
 
 @injectable()
 export class NarrativeNodeView extends ShapeView {
