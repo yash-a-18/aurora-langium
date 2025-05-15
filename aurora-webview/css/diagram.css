@@ -32,6 +32,13 @@
     fill: #9c0909
 }
 
+.sprotty-nlnegative-node {
+    fill: #ffffff;
+    stroke: #9c0909; /* Red border */
+    stroke-width: 4px; /* Adjust thickness as needed */
+    stroke-dasharray: 4, 2; /* Creates dashed border: 4px dash, 2px gap */
+}
+
 .sprotty-nltaskcompleted-node {
     fill: #89B345
 }

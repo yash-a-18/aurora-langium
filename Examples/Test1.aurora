@@ -12,13 +12,13 @@ mi from MI_DrKim_2024
 
 Orders:
 Diet:
-NAS (?chf, !mi)
+!NAS (?chf, !mi)
 
 Activity:
 semifowlers (chf)
 
 Vitals:
-vitals (chf) ??q4h;
+?vitals (chf) ??q4h;
 
 AlliedHealthConsults:
 chf_navigator (chf)
@@ -36,7 +36,7 @@ creatinine (chf)
 foley_catheter (chf) ??accurate fluid ins/outs;
 
 Treatment:
-iv (chf, mi) ??saline lock;
+~iv (chf, mi) ??saline lock;
 ??NS @ 75cc/hr;
 
 furosemide (~chf) -- 40 mg iv now;
@@ -44,7 +44,7 @@ furosemide (~chf) -- 40 mg iv now;
 
 nitroglycerine (chf) xx i puffs q1h prn until systolic <= 140;
 o2 (chf) ??to keep sats > 95%;
-consult (mi) !!cardiology stat;
+?consult (mi) !!cardiology stat;
 asa (!mi) !! 160 mg po stat and 80 mg po od ;
 enoxaparin (mi) ?? 1mg/kg bid ;
 plavix (mi) -- 300mg po now and 75 mg po od ;

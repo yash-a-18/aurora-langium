@@ -106,13 +106,21 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         } as SNode;
     }
     protected generateOC(oc: OrderCoordinate, { idCache }: GeneratorContext<PCM>): SModelElement {
-        var i = "node:oc"
-        if (extractQURefsArray(oc.qurc).refs.length == 0){
-            i = "node:ocorphan"
+        const qus = oc.qu?.map(q => q.query) ?? [];
+        const hasRefs = extractQURefsArray(oc.qurc).refs.length > 0;
+        var nodeType = 'node:oc'; // default
+        if (!hasRefs) {
+            nodeType = 'node:ocorphan'; // no reference edge
+        } else if (qus.includes('!')) {
+            nodeType = 'node:oc-urgent';
+        } else if (qus.includes('?')) {
+            nodeType = 'node:oc-draft';
+        } else if (qus.includes('~')) {
+            nodeType = 'node:oc-negative';
         }
         const nodeId = idCache.uniqueId(oc.name, oc);
         return {
-            type: i,
+            type: nodeType,
             id: nodeId,
             children: [<SLabel>{ type: 'label:darktext', id: idCache.uniqueId(nodeId + '.label'), text: oc.name}],
             layout: 'stack',
