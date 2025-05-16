@@ -24,6 +24,7 @@ import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
 import { HideNGOsActionHandler } from './handlers/hide-ngos-handler';
 import { HideNarrativesActionHandler } from './handlers/hide-narratives-handler';
+import { ElementSelectedActionHandler } from './handlers/element-selected-handler';
 const shared = require('../../shared/utils');
 
 export const elkFactory: ElkFactory = () => new ElkConstructor({
@@ -58,6 +59,10 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(HideNarrativesActionHandler).toSelf().inSingletonScope();
     bind('hideNarratives').toService(HideNarrativesActionHandler);
     configureActionHandler(context, 'hideNarratives', HideNarrativesActionHandler)
+
+    bind(ElementSelectedActionHandler).toSelf().inSingletonScope();
+    bind('elementSelected').toService(ElementSelectedActionHandler);
+    configureActionHandler(context, 'elementSelected', ElementSelectedActionHandler)
     
     
     bind(ElkFactory).toConstantValue(elkFactory);

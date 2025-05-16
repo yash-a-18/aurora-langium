@@ -123,7 +123,8 @@
             { "command": "aurora.focus", "title": "Focus Aurora Diagram", "category": "Aurora" },
             { "command": "aurora.diagram.open", "title": "Open Aurora Diagram", "category": "Aurora Diagram" },
             { "command": "aurora.diagram.toggleLayout","title": "Toggle Aurora Diagram Layout","icon": "$(activate-breakpoints)" },
-            {"command": "filter.test", "title": "testing filtering on the diagram"}
+            {"command": "filter.test", "title": "testing filtering on the diagram"},
+            {"command": "diagram.revealSelectedElementRange", "title": "testing select actions"}
         ]
     },
     "activationEvents": [

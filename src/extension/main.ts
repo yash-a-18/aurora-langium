@@ -5,8 +5,7 @@ import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-comman
 import { createAuroraServices } from '../language/aurora-module.js';
 import { NodeFileSystem } from 'langium/node';
 import { parseFromText } from './src/parser/parser.js';
-// import { hideNarratives } from './src/commands/hide-narratives-command.js';
-import { hideNGOs } from './src/commands/hide-ngos-command.js';
+import { AstUtils } from 'langium';
 
 
 // This function is called when the extension is activated.
@@ -35,19 +34,47 @@ export function activate(context: vscode.ExtensionContext): void {
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('filter.test', async () => {
-                const activeEditor = vscode.window.activeTextEditor
+            vscode.commands.registerCommand('diagram.revealSelectedElementRange', async (selectedElementID: string) => {
+                console.log('hey we selected this element: ', selectedElementID)
+                let activeEditor = vscode.window.activeTextEditor
                 if(activeEditor) {
-                    const pcm = await parseFromText(createAuroraServices(NodeFileSystem).Aurora, 
-                                              activeEditor.document.getText())
-                    hideNGOs(pcm, langConfig)
+                    const text = activeEditor.document.getText()
+                    const pcm = await parseFromText(createAuroraServices(NodeFileSystem).Aurora, text)
+                    const selectedPCMNode = AstUtils.streamAllContents(pcm).toArray()
+                                                    .filter(an => an.$cstNode?.text === selectedElementID[0])[0].$cstNode
+
+                    if(selectedPCMNode) {
+                        const startPos = activeEditor.document.positionAt(selectedPCMNode.offset);
+                        const endPos = activeEditor.document.positionAt(selectedPCMNode.offset + selectedPCMNode.length);
+
+                        const range = new vscode.Range(startPos, endPos);
+                        highlightRange(range);
+                    }
+                    
                 }                
             })
-        )
+        );
+
+        
 }
 
 // This function is called when the extension is deactivated.
 export function deactivate(): Thenable<void> | undefined {
     LanguageClientConfigSingleton.getInstance().stopClient()
     return undefined;
+}
+
+
+export function highlightRange(range: vscode.Range) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        vscode.window.showWarningMessage('No active editor');
+        return;
+    }
+
+    const decorationType = vscode.window.createTextEditorDecorationType({
+        backgroundColor: 'rgba(255,215,0,0.3)' // light yellow
+    });
+
+    editor.setDecorations(decorationType, [range]);
 }
