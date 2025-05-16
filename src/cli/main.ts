@@ -9,6 +9,10 @@ import { NodeFileSystem } from 'langium/node';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
+
+/**the stuff below merely finds the package.json to find the version number so the command line can know this. 
+ * this is not important right now
+ */
 const __dirname = path.resolve();
 
 const packagePath = path.resolve(__dirname, '..', '..', 'package.json');

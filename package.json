@@ -1,13 +1,14 @@
 {
     "name": "aurora-langium",
     "description": "It contains the DSL named Aurora",
-    "version": "0.2.15",
+    "version": "0.2.24",
     "files": [
         "bin",
         "out",
         "src",
         "pack",
-        "dist"
+        "dist",
+        "syntaxes"
     ],
     "type": "module",
     "main": "dist/cjs/extension/main.cjs",
@@ -16,6 +17,16 @@
             "import": "./dist/cjs/extension/langclientconfig.cjs",
             "require": "./dist/cjs/extension/langclientconfig.cjs",
             "types": "./dist/types/src/extension/langclientconfig.d.ts"
+        },
+        "./dist/types/src/extension/src/parser/parser": {
+            "import": "./dist/cjs/extension/src/parser/parser.cjs",
+            "require": "./dist/cjs/extension/src/parser/parser.cjs",
+            "types": "./dist/types/src/extension/src/parser/parser.d.ts"
+        },
+        "./dist/types/src/language/aurora-module": {
+            "import": "./dist/cjs/language/aurora-module.cjs",
+            "require": "./dist/cjs/language/aurora-module.cjs",
+            "types": "./dist/types/src/language/aurora-module.d.ts"
         },
         ".": {
             "import": "./dist/cjs/index.cjs",
@@ -31,11 +42,22 @@
             "import": "./dist/cjs/extension/src/commands/toggle-diagram-layout-command.cjs",
             "require": "./dist/cjs/extension/src/commands/toggle-diagram-layout-command.cjs",
             "types": "./dist/types/src/extension/src/commands/toggle-diagram-layout-command.d.ts"
+        },
+        "./cli": {
+            "import": "./dist/cjs/cli/index.cjs",
+            "require": "./dist/cjs/cli/index.cjs",
+            "types": "./dist/types/src/cli/index.d.ts"
+        },
+        "./dist/types/src/language/aurora-diagram-generator": {
+            "import": "./dist/cjs/language/aurora-diagram-generator.cjs",
+            "require": "./dist/cjs/language/aurora-diagram-generator.cjs",
+            "types": "./dist/types/src/language/aurora-diagram-generator.d.ts"
         }
+
     },
     "types": "dist/types/index.d.ts",
     "scripts": {
-        "build": "npm run build:aurora-webview && tsc && tsc --project tsconfig.cjs.json && node esbuild.mjs",
+        "build": "tsc && tsc --project tsconfig.cjs.json && node esbuild.mjs",
         "build:aurora-webview": "cd aurora-webview && npm i && npm run build",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
@@ -43,7 +65,7 @@
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
         "test": "vitest run",
-        "prepare": "npm run langium:generate && npm run build"
+        "aurora": "npm i && npm run build:aurora-webview && npm run langium:generate && npm run build"
     },
     "dependencies": {
         "chalk": "~5.3.0",
@@ -115,7 +137,8 @@
                 {
                     "id": "aurora",
                     "type": "webview",
-                    "name": "Patient Care Scenario"
+                    "name": "Patient Care Scenario",
+                    "icon": "$(symbol-structure)"
                 }
             ]
         },

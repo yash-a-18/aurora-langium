@@ -1,10 +1,22 @@
 Clinical:
-NGC1:
-CC1 - Nar1
+NGC1: @10:30
+// Spaces are optional after hypen now
+@2023/11/16 10:30 CC1 - 'Nar1'
+Hb[13.5 mg, 12.8 mg](CC1, IC1) -x 'Normal range for adult female.'
 
-arith_module binaryexpressions
-3 * 6;
-2 + 1;
-4 / 1;
-4 ^ 2;
-8 % 2;
+Issues:
+IC1
+
+
+arith_module binaryexpressions {
+    3 * 6;
+    2 + (1 + 1);
+    4 / 1;
+    (4 + 2) / 3 * 2;
+    10 - 2 * 5 / 3;
+    4 ^ 2;
+    8 % 2;
+    6 - 1;
+    1 - 5;
+    (5 + 1) - 7 * (1 - 3);
+}

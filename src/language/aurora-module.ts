@@ -7,6 +7,9 @@ import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule, SprottyDefaultModule } from 'langium-sprotty';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator} from 'sprotty-elk';
 import ElkConstructor from 'elkjs/lib/elk.bundled.js';
+import { AuroraHoverProvider } from './hover-provider.js';
+// import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
+import { AuroraCommandHandler } from './aurora-commands.js';
 import { AuroraLayoutConfigurator } from '../../shared/utils.js';
 
 
@@ -51,6 +54,10 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Sprot
         ElkFactory: () => () => new ElkConstructor.default({ algorithms: [ 'layered', 'stress', 'mrtree', 'radial', 'force', 'disco' ] }),
         ElementFilter: () => new DefaultElementFilter,
         LayoutConfigurator: () => createLayoutConfig(),
+    },
+    lsp: {
+        // SemanticTokenProvider: (services) => new AuroraSemanticTokenProvider(services),
+        HoverProvider: (services) => new AuroraHoverProvider(services)
     }
 };
 
@@ -90,6 +97,14 @@ export function createAuroraServices(context: DefaultSharedModuleContext): {
     );
     shared.ServiceRegistry.register(Aurora);
     registerValidationChecks(Aurora);
+    // Register the ExecuteCommandHandler via the LSP connection
+    if (context.connection) {
+        const commandHandler = new AuroraCommandHandler();
+        context.connection.onExecuteCommand(async (params) => {
+            // Ensure correct arguments are passed
+            return commandHandler.executeCommand(params.command, params.arguments ?? []);
+        });
+    }
     if (!context.connection) {
         // We don't run inside a language server
         // Therefore, initialize the configuration provider instantly

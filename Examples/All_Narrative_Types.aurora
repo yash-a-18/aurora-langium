@@ -1,26 +1,26 @@
 Issues:
 IC1 : ic1
 
-
 Orders:
+/* comments are skipped */
 ngo1:
-oc0 - single line normal
+oc0 - 'single line normal'
 
 oc1 -- multi line normal;
 
-oc2 -? single line draft
+oc2 -? 'single line draft'
 
 oc3 ?? multi line draft;
 
-oc4 -! single line exclamation
+oc4 -! 'single line exclamation'
 
-oc5 !! single line exclamation;
+oc5 !! multi line exclamation;
 
-oc6 -x single line completed
+oc6 -x 'single line completed'
 
-oc7 xx single line completed;
+oc7 xx multi line completed;
 
-oc8 -. single line task
+oc8 -. 'single line task'
 
-oc9 .. single line task;
+oc9 .. multi line task;
 

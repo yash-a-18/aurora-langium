@@ -1,8 +1,8 @@
 Clinical:
-NGC1:
-CC1 - Nar1
+NGC1: @2023/11/16 10:30
+CC1 - 'Nar1'
 Allergies
-CC2 -! Nar2
+CC2 -! 'Nar2'
 
 Issues:
 IC1 : ic1 from Thunder_Bay_Regional_CHF
