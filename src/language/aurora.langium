@@ -25,7 +25,7 @@ namedGroups+=NamedGroupClinical*;
 NamedGroupClinical:
     name=ID_WITH_COLON
     timestamp=TimeStamp ?
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
     coord+=(ClinicalCoordinate | ClinicalValue  )*
 ;
@@ -34,7 +34,7 @@ ClinicalCoordinate:
     qu+=QU *
     timestamp=TimeStamp ?
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
 
@@ -46,20 +46,20 @@ ClinicalValue:
     values+=SingleValueUnit
     (',' values+=SingleValueUnit  )*
     ']'
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
 
 /* Value Unit */
 SingleValueUnit :
     negative='(-)' ?
-    value=(ID | INT | Float | Fraction | Boolean  )
-    unit=(ID | INT | Float | Fraction | Boolean | '_'  )
+    value=(ID | NUMBER | Float | Fraction | Boolean  )
+    unit=(ID | NUMBER | Float | Fraction | Boolean | '_'  )
 ;
 
-Fraction returns string: INT '/' INT;
-Boolean returns string: 'y' | 'n' ;
-Float returns string: INT '.' INT ;
+Fraction returns string: NUMBER '/' NUMBER;
+Boolean returns string: 'TRUE' | 'FALSE' ;
+Float returns string: NUMBER '.' NUMBER ;
 
 TimeStamp:
     '@' ((empty="time" ) | (date=AuroraDate  | time=Time  )| (date=AuroraDate  time=Time  ) )
@@ -74,7 +74,7 @@ IssueCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     (':' snomed=Snomed)?
     ('from' mods+=[MODULE:ID] (',' mods+=[MODULE:ID])*
             ('with' temps+=[TEMPLATE: ID] (',' temps+=[TEMPLATE:ID])*)? )?
@@ -82,6 +82,13 @@ IssueCoordinate:
 ;
 
 ReferenceCoordinate: (IssueCoordinate | OrderCoordinate | ClinicalCoordinate);
+
+QuReference:
+    qu += QU*
+    ref = [ReferenceCoordinate:ID];
+
+QuReferences:
+    '('quRefs += QuReference  (',' quRefs += QuReference)* ')';
 
 Orders:
 'Orders:'
@@ -92,7 +99,7 @@ NamedGroupOrder:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID_WITH_COLON
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     narrative+=NL_STATEMENT *
     (orders+=(OrderCoordinate | MutuallyExclusive))*;
 
@@ -100,7 +107,7 @@ OrderCoordinate:
     comment+= ML_COMMENT*
     qu += QU*
     name=ID
-    ('('refs+=[ReferenceCoordinate:ID] (',' refs+=[ReferenceCoordinate:ID])* ')')?
+    qurc = QuReferences?
     narrative+= NL_STATEMENT* ;
 
 MutuallyExclusive:
@@ -111,21 +118,22 @@ MutuallyExclusive:
 TEMPLATE: "template" name=ID  elements+=(Clinical |  Orders)*;
 MODULE:   "module:"  name=ID  elements+=(Issues |  Orders)*;
 
-AuroraDate returns string:INT '/' INT '/' INT  | INT | INT '/' INT;
-Time returns string: INT ':' INT ;
+AuroraDate returns string:NUMBER '/' NUMBER '/' NUMBER  | NUMBER | NUMBER '/' NUMBER;
+Time returns string: NUMBER ':' NUMBER ;
 QU: query=QUTERMINAL;
 
 Snomed:name=ID;
 
+//For all PREFIX SINGLE the single quotes are mandatory
 terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )? ;
+// For all PREFIX MULTI the single quotes are optional but semi-colon at the end is mandatory
 terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
 
 
-terminal NL_STATEMENTMULTI returns string: PREFIXMULTI  -> ';'  ;
-terminal ID_WITH_COLON: /[a-zA-Z0-9_]+:/;
+terminal NL_STATEMENTMULTI returns string: PREFIXMULTI -> /[^\n]*;/;
+terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
-terminal SINGLENL returns string: /-(\??|\.\?|!|x)?([^\n]*)/;
+terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
 terminal ML_COMMENT returns string:'/*'  -> '*/'  ;
-terminal SL_COMMENT returns string:'//'  !('\n' | '\r' )('\r'? '\n' )?  ;
 // hidden terminal WS: /\s+/;
-terminal QUTERMINAL returns string:('?' | '!' | '*' | '~' );
+terminal QUTERMINAL returns string:('?' | '!' | '~');

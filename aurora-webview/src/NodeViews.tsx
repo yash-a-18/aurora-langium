@@ -184,6 +184,21 @@ export class OrderCoordinateExclamationNodeView extends ShapeView {
 }
 
 @injectable()
+export class OrderCoordinateNegativeNodeView extends ShapeView {
+    render(node: Readonly<SShapeElementImpl & Hoverable & Selectable>, context: RenderingContext, args?: IViewArgs): VNode | undefined {
+        if (!this.isVisible(node, context)) {
+            return undefined;
+        }
+        return <g>
+            <rect class-sprotty-nlnegative-node={node instanceof SNodeImpl} class-sprotty-port={node instanceof SPortImpl}
+                  class-mouseover={node.hoverFeedback} class-selected={node.selected}
+                  x="0" y="0" width={Math.max(node.size.width, 0)} height={Math.max(node.size.height, 0)}></rect>
+            {context.renderChildren(node)}
+        </g>;
+    }
+}
+
+@injectable()
 export class OrderCoordinateDraftNodeView extends ShapeView {
     render(node: Readonly<SShapeElementImpl & Hoverable & Selectable>, context: RenderingContext, args?: IViewArgs): VNode | undefined {
         if (!this.isVisible(node, context)) {

@@ -15,10 +15,13 @@ import { DarkTextLabelView } from './LabelViews'
 
 import { NarrativeDraftNodeView,
     NarrativeExclamationNodeView, NarrativeNodeView, NarrativeTaskCompletedNodeView,NarrativeTaskNodeView,
-    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView, HiddenNodeView} from './NodeViews'
+    OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView,
+    OrderCoordinateDraftNodeView,
+    OrderCoordinateExclamationNodeView,
+    OrderCoordinateNegativeNodeView, HiddenNodeView} from './NodeViews'
 import { CustomRouter } from './custom-edge-router';
-import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
-import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { CreateTransitionPort, DraftEdge, NegativeEdge, StatesEdge, StatesNode, UrgentEdge } from './model';
+import { PolylineArrowDraftEdgeView, PolylineArrowEdgeView, PolylineArrowNegativeEdgeView, PolylineArrowUrgentEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
@@ -79,6 +82,10 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureModelElement(context, 'node:nltask', StatesNode, NarrativeTaskNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:oc', StatesNode, OrderCoordinateNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:ocorphan', StatesNode, OrderCoordinateOrphanNodeView,{enable: [openFeature]});
+    configureModelElement(context, 'node:oc-urgent', StatesNode, OrderCoordinateExclamationNodeView,{enable: [openFeature]});
+    configureModelElement(context, 'node:oc-draft', StatesNode, OrderCoordinateDraftNodeView,{enable: [openFeature]});
+    configureModelElement(context, 'node:oc-negative', StatesNode, OrderCoordinateNegativeNodeView,{enable: [openFeature]});
+
 
 
     configureModelElement(context, 'label', SLabelImpl, SLabelView, {
@@ -91,6 +98,9 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
         enable: [editLabelFeature]
     });
     configureModelElement(context, 'edge', StatesEdge, PolylineArrowEdgeView);
+    configureModelElement(context, 'edge:negative', NegativeEdge, PolylineArrowNegativeEdgeView);
+    configureModelElement(context, 'edge:draft', DraftEdge, PolylineArrowDraftEdgeView);
+    configureModelElement(context, 'edge:urgent', UrgentEdge, PolylineArrowUrgentEdgeView);
     configureModelElement(context, 'html', HtmlRootImpl, HtmlRootView);
     configureModelElement(context, 'pre-rendered', PreRenderedElementImpl, PreRenderedView);
     configureModelElement(context, 'palette', SModelRootImpl, HtmlRootView);

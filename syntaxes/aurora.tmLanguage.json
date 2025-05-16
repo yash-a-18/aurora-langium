@@ -13,7 +13,7 @@
     },
     {
       "name": "storage.type",
-      "match": "\\b(from|import|module|Treatment|Treatments|package|template|time|y|Investigations|Investigation|Issues|Clinical|Activity|Orders|Vitals|Vital|Treatment|Antibiotics|Antibiotic|Diet|Labs|Lab)\\b"
+      "match": "\\b(from|import|module|Treatment|Treatments|package|template|time|TRUE|FALSE|Investigations|Investigation|Issues|Clinical|Activity|Orders|Vitals|Vital|Treatment|Antibiotics|Antibiotic|Diet|Labs|Lab)\\b"
     },
     {
       "name": "storage.type",
@@ -130,14 +130,8 @@
           }
         },
         {
-          "begin": "//\n\r",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.whitespace.comment.leading.aurora"
-            }
-          },
-          "end": "(?=$)",
-          "name": "comment.line.aurora"
+          "name": "comment.line.aurora",
+          "match": "(//).*$"
         }
       ]
     },

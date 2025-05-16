@@ -14,7 +14,15 @@ export class StatesEdge extends SEdgeImpl {
 export class NegativeEdge extends SEdgeImpl {
     override routerKind = PolylineEdgeRouter.KIND;
     override targetAnchorCorrection = Math.sqrt(5);
-    override opacity = .1
+    // override opacity = .1
+}
+export class DraftEdge extends SEdgeImpl {
+    override routerKind = PolylineEdgeRouter.KIND;
+    override targetAnchorCorrection = Math.sqrt(5);
+}
+export class UrgentEdge extends SEdgeImpl {
+    override routerKind = PolylineEdgeRouter.KIND;
+    override targetAnchorCorrection = Math.sqrt(5);
 }
 export class StatesEdgeLabel extends SLabelImpl {
     override edgePlacement = <EdgePlacement> {
