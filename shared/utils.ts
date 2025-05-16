@@ -43,3 +43,18 @@ export class AuroraLayoutConfigurator extends DefaultLayoutConfigurator {
     }
 
 }
+
+export const HIDE_NGOS_ACTION_KIND = 'hideNGOs';
+
+export interface HideNGOsAction extends Action {
+    kind: typeof HIDE_NGOS_ACTION_KIND;
+    ocNames: string[];
+    children: string[];
+}
+
+export const HIDE_NARRATIVES_ACTION_KIND = 'hideNarratives';
+
+export interface HideNarrativesAction extends Action {
+    kind: typeof HIDE_NARRATIVES_ACTION_KIND;
+    narratives: string[];
+}

@@ -18,13 +18,15 @@ import { NarrativeDraftNodeView,
     OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView,
     OrderCoordinateDraftNodeView,
     OrderCoordinateExclamationNodeView,
-    OrderCoordinateNegativeNodeView} from './NodeViews'
+    OrderCoordinateNegativeNodeView, HiddenNodeView} from './NodeViews'
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, DraftEdge, NegativeEdge, StatesEdge, StatesNode, UrgentEdge } from './model';
 import { PolylineArrowDraftEdgeView, PolylineArrowEdgeView, PolylineArrowNegativeEdgeView, PolylineArrowUrgentEdgeView, TriangleButtonView } from './views';
 import { UpdateLayoutActionHandler } from './handlers/update-layout-handler';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
+import { HideNGOsActionHandler } from './handlers/hide-ngos-handler';
+import { HideNarrativesActionHandler } from './handlers/hide-narratives-handler';
 const shared = require('../../shared/utils');
 
 export const elkFactory: ElkFactory = () => new ElkConstructor({
@@ -51,6 +53,14 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(UpdateLayoutActionHandler).toSelf().inSingletonScope();
     bind('updateLayout').toService(UpdateLayoutActionHandler);
     configureActionHandler(context, 'updateLayout', UpdateLayoutActionHandler)
+
+    bind(HideNGOsActionHandler).toSelf().inSingletonScope();
+    bind('hideNGOs').toService(HideNGOsActionHandler);
+    configureActionHandler(context, 'hideNGOs', HideNGOsActionHandler)
+
+    bind(HideNarrativesActionHandler).toSelf().inSingletonScope();
+    bind('hideNarratives').toService(HideNarrativesActionHandler);
+    configureActionHandler(context, 'hideNarratives', HideNarrativesActionHandler)
     
     
     bind(ElkFactory).toConstantValue(elkFactory);
@@ -58,11 +68,12 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(DefaultElementFilter).toSelf().inSingletonScope(); 
     bind(TYPES.IModelLayoutEngine).toDynamicValue(() => globalLayoutEngine).inSingletonScope();
 
-
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
+    
     configureModelElement(context, 'node', StatesNode, RectangularNodeView,{enable: [openFeature]});
+    configureModelElement(context, 'node:hidden', StatesNode, HiddenNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:ic', StatesNode, IssueCoordinateNodeView,{enable: [openFeature, alignFeature]});
     configureModelElement(context, 'node:nl', StatesNode, NarrativeNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:nldraft', StatesNode, NarrativeDraftNodeView,{enable: [openFeature]});
@@ -74,6 +85,7 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureModelElement(context, 'node:oc-urgent', StatesNode, OrderCoordinateExclamationNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:oc-draft', StatesNode, OrderCoordinateDraftNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:oc-negative', StatesNode, OrderCoordinateNegativeNodeView,{enable: [openFeature]});
+
 
 
     configureModelElement(context, 'label', SLabelImpl, SLabelView, {
