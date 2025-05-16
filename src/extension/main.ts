@@ -2,10 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
 import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
-import { hideNGOs } from './src/commands/hide-ngos-command.js';
 import { createAuroraServices } from '../language/aurora-module.js';
 import { NodeFileSystem } from 'langium/node';
 import { parseFromText } from './src/parser/parser.js';
+// import { hideNarratives } from './src/commands/hide-narratives-command.js';
+import { hideNGOs } from './src/commands/hide-ngos-command.js';
 
 
 // This function is called when the extension is activated.

@@ -7,24 +7,25 @@ const shared = require('../../../shared/utils');
 
 
 @injectable()
-export class HideNGOsActionHandler implements IActionHandler {
+export class HideNarrativesActionHandler implements IActionHandler {
 
     constructor(
         @inject(TYPES.ModelSource) protected readonly modelSource: VscodeDiagramServer
     ) {}
 
     handle(action: Action) {
-        if (action.kind === shared.HIDE_NGOS_ACTION_KIND) {
-            const ocNames = (action as any).ocNames;
+        if (action.kind === shared.HIDE_NARRATIVES_ACTION_KIND) {
+            const narratives = (action as any).narratives;
 
-            const withoutEdges = markNodesHidden(this.modelSource.model, ocNames, true);
+            const withoutEdges = markNodesHidden(this.modelSource.model, narratives, true);
             this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(withoutEdges, {animate: true}));
 
             setTimeout(() => {
-                const updatedRoot = markNodesHidden(this.modelSource.model, ocNames, false);
+                const updatedRoot = markNodesHidden(this.modelSource.model, narratives, false);
                 this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(updatedRoot, {animate: true}));
-            }, 5);      
-        }        
+            }, 5); 
+        }
     }
+
 
 }
