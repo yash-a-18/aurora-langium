@@ -32,10 +32,14 @@ export function hideNGOs(pcm: PCM, langConfig: LanguageClientConfigSingleton) {
     quickPick.onDidAccept(() => {
         const hideTheseOrderCoordinates = selectedNGOs.flatMap(ngo => ngo.orders)
                                                   .filter(o => o.$type === 'OrderCoordinate')
-                                                  .map(o => (o as OrderCoordinate).name)   
+                                                  .map(o => o as OrderCoordinate)
+                                                   
+        const hideTheseChildren = hideTheseOrderCoordinates.flatMap(oc => oc.narrative)
+        
         const action: HideNGOsAction = {
             kind: HIDE_NGOS_ACTION_KIND,
-            ocNames: hideTheseOrderCoordinates,
+            ocNames: hideTheseOrderCoordinates.map(o => (o as OrderCoordinate).name),
+            children: hideTheseChildren.map(n => n.name)
         };    
         langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
         quickPick.dispose();

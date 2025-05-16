@@ -15,13 +15,13 @@ export class HideNGOsActionHandler implements IActionHandler {
 
     handle(action: Action) {
         if (action.kind === shared.HIDE_NGOS_ACTION_KIND) {
-            const ocNames = (action as any).ocNames;
+            const nodesToHide: string[] = (action as any).ocNames.concat((action as any).children);
 
-            const withoutEdges = markNodesHidden(this.modelSource.model, ocNames, true);
+            const withoutEdges = markNodesHidden(this.modelSource.model, nodesToHide, true);
             this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(withoutEdges, {animate: true}));
 
             setTimeout(() => {
-                const updatedRoot = markNodesHidden(this.modelSource.model, ocNames, false);
+                const updatedRoot = markNodesHidden(this.modelSource.model, nodesToHide, false);
                 this.modelSource.actionDispatcher.dispatch(UpdateModelAction.create(updatedRoot, {animate: true}));
             }, 5);      
         }        
