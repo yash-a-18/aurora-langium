@@ -5,6 +5,8 @@ import { Messenger } from 'vscode-messenger';
 import { LanguageClient, TransportKind, State } from 'vscode-languageclient/node.js';
 import { createFileUri, createWebviewHtml as doCreateWebviewHtml } from 'sprotty-vscode';
 import {  registerDefaultCommands, registerTextEditorSync } from 'sprotty-vscode';
+import { ElementSelectedNotification } from '../../shared/utils.js';
+import { revealElementRange } from './src/commands/element-selected-command.js';
 
 export class LanguageClientConfigSingleton {
     private static instance: LanguageClientConfigSingleton;
@@ -86,6 +88,12 @@ export class LanguageClientConfigSingleton {
                         webviewOptions: { retainContextWhenHidden: true }
             })
         );
+
+        // This is where we can receive messages from aurora-webview (in the form of notifications)
+        // TODO: formalize this so we can add more (maybe add a function that handles all of them)
+        this.webviewProvider?.messenger.onNotification(ElementSelectedNotification, message => {
+            revealElementRange(message.elementID)
+        })
 
         registerDefaultCommands(wvp, this.context!, { extensionPrefix: 'aurora' });
         registerTextEditorSync(wvp, this.context!);
