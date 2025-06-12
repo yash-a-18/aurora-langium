@@ -60,8 +60,23 @@ export interface HideNarrativesAction extends Action {
     narratives: string[];
 }
 
+export const MOUSEWHEEL_HIDE_ACTION_KIND = 'mouseWheelHide';
+
+export interface MouseWheelHideAction extends Action {
+    kind: typeof MOUSEWHEEL_HIDE_ACTION_KIND;
+    ocNames: string[];
+    ocChildren: string[];
+    standaloneNars: string[]
+}
+
 export interface ElementSelectedMessage {
     elementID: string
 }
 
 export const ElementSelectedNotification: NotificationType<ElementSelectedMessage> = { method: 'elementSelected' };
+
+export interface HideMessage {
+    state: number
+}
+
+export const HideNotification: NotificationType<HideMessage> = { method: 'state' };

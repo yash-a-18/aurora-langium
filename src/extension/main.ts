@@ -2,12 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
 import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
-// import { ElementSelectedNotification } from '../../shared/utils.js';
-// import { createAuroraServices } from '../language/aurora-module.js';
-// import { NodeFileSystem } from 'langium/node';
-// import { parseFromText } from './src/parser/parser.js';
-// import { AstUtils } from 'langium';
-// import { IActionDispatcher, IActionHandler } from 'sprotty';
 
 
 // This function is called when the extension is activated.

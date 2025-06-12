@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
-      "ESNext"
+      "ESNext", "DOM"
     ],
     "declaration": true,
   },
