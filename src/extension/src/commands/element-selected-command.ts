@@ -29,14 +29,27 @@ let activeEditor = vscode.window.activeTextEditor
                 } 
 }
 
+let currentDecoration: vscode.TextEditorDecorationType | null = null;
+
 function highlightRange(range: vscode.Range) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         vscode.window.showWarningMessage('No active editor');
         return;
     }
-    const decorationType = vscode.window.createTextEditorDecorationType({
+
+    // Clear previous highlight
+    if (currentDecoration) {
+        editor.setDecorations(currentDecoration, []); // removes old highlight from the editor
+        currentDecoration.dispose();
+        currentDecoration = null;
+    }
+
+    // Create a new decoration for the new range
+    currentDecoration = vscode.window.createTextEditorDecorationType({
         backgroundColor: 'rgba(255,215,0,0.3)'
     });
-    editor.setDecorations(decorationType, [range]);
+
+    // Apply the new decoration
+    editor.setDecorations(currentDecoration, [range]);
 }
