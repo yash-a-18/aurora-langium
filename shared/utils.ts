@@ -10,7 +10,7 @@ export interface UpdateLayoutAction extends Action {
     layout: string;
 }
 
-export var currentLayout = 'stress'
+export var currentLayout = 'layered'
 
 export function setCurrentLayout(alg: string): void {
     currentLayout = alg
