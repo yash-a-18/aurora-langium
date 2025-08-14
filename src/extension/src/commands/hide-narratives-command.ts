@@ -8,7 +8,6 @@ export function hideNarratives(pcm: PCM, langConfig: LanguageClientConfigSinglet
     const narList = AstUtils.streamAllContents(pcm).toArray()
                             .filter(c => c.$type === 'NL_STATEMENT')
                             .map(n => (n as NL_STATEMENT).name)
-    console.log('narList computed at command: ', narList)
     const action: HideNarrativesAction = {
         kind: HIDE_NARRATIVES_ACTION_KIND,
         narratives: narList

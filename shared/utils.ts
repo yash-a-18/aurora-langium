@@ -1,6 +1,7 @@
 import { LayoutOptions } from "elkjs";
 import { DefaultLayoutConfigurator } from "sprotty-elk";
 import { Action, SGraph, SModelIndex, SNode, SPort} from "sprotty-protocol"
+import { NotificationType } from 'vscode-messenger-common';
 
 export const UPDATE_LAYOUT_ACTION_KIND = 'updateLayout';
 
@@ -58,3 +59,24 @@ export interface HideNarrativesAction extends Action {
     kind: typeof HIDE_NARRATIVES_ACTION_KIND;
     narratives: string[];
 }
+
+export const MOUSEWHEEL_HIDE_ACTION_KIND = 'mouseWheelHide';
+
+export interface MouseWheelHideAction extends Action {
+    kind: typeof MOUSEWHEEL_HIDE_ACTION_KIND;
+    ocNames: string[];
+    ocChildren: string[];
+    standaloneNars: string[]
+}
+
+export interface ElementSelectedMessage {
+    elementID: string
+}
+
+export const ElementSelectedNotification: NotificationType<ElementSelectedMessage> = { method: 'elementSelected' };
+
+export interface HideMessage {
+    state: number
+}
+
+export const HideNotification: NotificationType<HideMessage> = { method: 'state' };

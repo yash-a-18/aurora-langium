@@ -5,6 +5,12 @@ import { Messenger } from 'vscode-messenger';
 import { LanguageClient, TransportKind, State } from 'vscode-languageclient/node.js';
 import { createFileUri, createWebviewHtml as doCreateWebviewHtml } from 'sprotty-vscode';
 import {  registerDefaultCommands, registerTextEditorSync } from 'sprotty-vscode';
+import { ElementSelectedNotification, HideNotification } from '../../shared/utils.js';
+import { revealElementRange } from './src/commands/element-selected-command.js';
+import { parseFromText } from './src/parser/parser.js';
+import { EmptyFileSystem } from 'langium';
+import { createAuroraServices } from '../language/aurora-module.js';
+import { mouseWheelHide } from './src/commands/mousewheel-hide-command.js';
 
 export class LanguageClientConfigSingleton {
     private static instance: LanguageClientConfigSingleton;
@@ -86,6 +92,31 @@ export class LanguageClientConfigSingleton {
                         webviewOptions: { retainContextWhenHidden: true }
             })
         );
+
+
+
+
+        // This is where we can receive messages from aurora-webview (in the form of notifications)
+        // TODO: formalize this so we can add more (maybe add a function that handles all of them)
+        this.webviewProvider?.messenger.onNotification(ElementSelectedNotification, message => {
+            revealElementRange(message.elementID)
+        })
+
+        this.webviewProvider?.messenger.onNotification(HideNotification, async message => {
+            // what could be better when extending this to the reveal side is having an enumerated state system instead of number of clicks
+            // so compute the state based on the number of positive/negative clicks before sending it here and act accordingly
+            console.log('LangClient received hide state: ', message.state)
+            const text = vscode.window.activeTextEditor?.document.getText()
+            if(text) {
+                const pcm = await parseFromText(createAuroraServices(EmptyFileSystem).Aurora, text)
+                mouseWheelHide(pcm, this, message.state)
+            }
+        })
+
+
+
+
+
 
         registerDefaultCommands(wvp, this.context!, { extensionPrefix: 'aurora' });
         registerTextEditorSync(wvp, this.context!);

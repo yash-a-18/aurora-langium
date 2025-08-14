@@ -27,6 +27,9 @@ import { DefaultElementFilter, ElkFactory, ElkLayoutEngine } from 'sprotty-elk'
 import ElkConstructor  from 'elkjs/lib/elk.bundled'
 import { HideNGOsActionHandler } from './handlers/hide-ngos-handler';
 import { HideNarrativesActionHandler } from './handlers/hide-narratives-handler';
+import { ElementSelectedActionHandler } from './handlers/element-selected-handler';
+import { CtrlZoomMouseListener } from './viewport/ctrl-zoom';
+import { MouseWheelHideActionHandler } from './handlers/mousewheel-hide-handler';
 const shared = require('../../shared/utils');
 
 export const elkFactory: ElkFactory = () => new ElkConstructor({
@@ -61,12 +64,24 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     bind(HideNarrativesActionHandler).toSelf().inSingletonScope();
     bind('hideNarratives').toService(HideNarrativesActionHandler);
     configureActionHandler(context, 'hideNarratives', HideNarrativesActionHandler)
+
+    bind(MouseWheelHideActionHandler).toSelf().inSingletonScope();
+    bind('mouseWheelHide').toService(MouseWheelHideActionHandler);
+    configureActionHandler(context, 'mouseWheelHide', MouseWheelHideActionHandler)
+
+    bind(ElementSelectedActionHandler).toSelf().inSingletonScope();
+    bind('elementSelected').toService(ElementSelectedActionHandler);
+    configureActionHandler(context, 'elementSelected', ElementSelectedActionHandler)
     
     
     bind(ElkFactory).toConstantValue(elkFactory);
 
     bind(DefaultElementFilter).toSelf().inSingletonScope(); 
     bind(TYPES.IModelLayoutEngine).toDynamicValue(() => globalLayoutEngine).inSingletonScope();
+
+    bind(CtrlZoomMouseListener).toSelf().inSingletonScope();
+    bind(TYPES.MouseListener).to(CtrlZoomMouseListener).inSingletonScope();
+
 
     configureModelElement(context, 'graph', SGraphImpl, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
