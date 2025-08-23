@@ -12,6 +12,25 @@
     fill: #545454
 }
 
+.sprotty-ic-draft-node {
+    fill: #545454;
+    stroke: #ddab61;
+    stroke-width: 4px;
+}
+
+.sprotty-ic-urgent-node {
+    fill: #545454;
+    stroke: #9c0909;
+    stroke-width: 4px;
+}
+
+.sprotty-ic-negative-node {
+    fill: #545454;
+    stroke: #9c0909;
+    stroke-width: 4px;
+    stroke-dasharray: 4, 2;
+}
+
 .sprotty-logic-node {
     fill: #ffffff
 }

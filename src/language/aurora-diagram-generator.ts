@@ -93,9 +93,20 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         } as SNode;
     }
     protected generateIC(state: IssueCoordinate, { idCache }: GeneratorContext<PCM>): SModelElement {
+        var nodeType = "node:ic"; // default
+        const qus = state.qu?.map(q => q.query) ?? [];
+        if (qus.includes('!')) {
+            nodeType = 'node:ic-urgent';
+        } else if (qus.includes('?')) {
+            nodeType = 'node:ic-draft';
+        } else if (qus.includes('~')) {
+            nodeType = 'node:ic-negative';
+        } else if (extractQURefsArray(state.qurc).refs.length === 0) {
+            nodeType = 'node:ic'; // no reference edge
+        }
         const nodeId = idCache.uniqueId(state.name, state);
         return {
-            type: 'node:ic',
+            type: nodeType,
             id: nodeId,
             children: [
                 <SLabel>{type: 'label',id: idCache.uniqueId(nodeId + '.label'),text: state.name}

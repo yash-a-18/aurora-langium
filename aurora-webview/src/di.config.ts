@@ -18,7 +18,10 @@ import { NarrativeDraftNodeView,
     OrderCoordinateNodeView, OrderCoordinateOrphanNodeView, IssueCoordinateNodeView,
     OrderCoordinateDraftNodeView,
     OrderCoordinateExclamationNodeView,
-    OrderCoordinateNegativeNodeView, HiddenNodeView} from './NodeViews'
+    OrderCoordinateNegativeNodeView, HiddenNodeView,
+    IssueCoordinateDraftNodeView,
+    IssueCoordinateNegativeNodeView,
+    IssueCoordinateUrgentNodeView} from './NodeViews'
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, DraftEdge, NegativeEdge, StatesEdge, StatesNode, UrgentEdge } from './model';
 import { PolylineArrowDraftEdgeView, PolylineArrowEdgeView, PolylineArrowNegativeEdgeView, PolylineArrowUrgentEdgeView, TriangleButtonView } from './views';
@@ -90,6 +93,9 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureModelElement(context, 'node', StatesNode, RectangularNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:hidden', StatesNode, HiddenNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:ic', StatesNode, IssueCoordinateNodeView,{enable: [openFeature, alignFeature]});
+    configureModelElement(context, 'node:ic-draft', StatesNode, IssueCoordinateDraftNodeView,{enable: [openFeature, alignFeature]});
+    configureModelElement(context, 'node:ic-urgent', StatesNode, IssueCoordinateUrgentNodeView,{enable: [openFeature, alignFeature]});
+    configureModelElement(context, 'node:ic-negative', StatesNode, IssueCoordinateNegativeNodeView,{enable: [openFeature, alignFeature]});
     configureModelElement(context, 'node:nl', StatesNode, NarrativeNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:nldraft', StatesNode, NarrativeDraftNodeView,{enable: [openFeature]});
     configureModelElement(context, 'node:nlexclamation', StatesNode, NarrativeExclamationNodeView,{enable: [openFeature]});
