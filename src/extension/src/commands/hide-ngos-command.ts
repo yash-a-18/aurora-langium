@@ -5,24 +5,11 @@ import { LanguageClientConfigSingleton } from '../../langclientconfig.js';
 
 
 export function hideNGOs(pcm: PCM, langConfig: LanguageClientConfigSingleton) {
-    const orderCoordinates: OrderCoordinate[] = getQuickPickedOCs(pcm)
-    const children = orderCoordinates.flatMap(oc => oc.narrative)        
-    const action: HideNGOsAction = {
-        kind: HIDE_NGOS_ACTION_KIND,
-        ocNames: orderCoordinates.map(o => (o as OrderCoordinate).name),
-        children: children.map(n => n.name)
-    };    
-    langConfig.webviewProvider?.findActiveWebview()?.sendAction(action); 
-    
-}
-
-function getQuickPickedOCs(pcm: PCM): OrderCoordinate[] {
     let quickPick = vscode.window.createQuickPick();
     quickPick.placeholder = 'Choose which NGOs to hide...';
     let ngoOptions = pcm.elements.filter(e => e.$type === 'Orders').flatMap(o => (o as Orders).namedGroups)
     quickPick.items = ngoOptions.map(ngoName => { return { label: ngoName.name }; });
     var selectedNGOs: NamedGroupOrder[] = []
-    var hideTheseOrderCoordinates: OrderCoordinate[] = []
     
     quickPick.canSelectMany = true
     
@@ -43,11 +30,18 @@ function getQuickPickedOCs(pcm: PCM): OrderCoordinate[] {
     quickPick.show();
                 
     quickPick.onDidAccept(() => {
-        hideTheseOrderCoordinates = selectedNGOs.flatMap(ngo => ngo.orders)
+        const hideTheseOrderCoordinates = selectedNGOs.flatMap(ngo => ngo.orders)
                                                   .filter(o => o.$type === 'OrderCoordinate')
                                                   .map(o => o as OrderCoordinate)
+                                                   
+        const hideTheseChildren = hideTheseOrderCoordinates.flatMap(oc => oc.narrative)
+        
+        const action: HideNGOsAction = {
+            kind: HIDE_NGOS_ACTION_KIND,
+            ocNames: hideTheseOrderCoordinates.map(o => (o as OrderCoordinate).name),
+            children: hideTheseChildren.map(n => n.name)
+        };    
+        langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
+        quickPick.dispose();
     });
-
-    quickPick.dispose();
-    return hideTheseOrderCoordinates
 }
