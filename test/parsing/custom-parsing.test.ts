@@ -8,6 +8,7 @@ import { EmptyFileSystem } from "langium";
 describe('Parsing tests', () => {
 
     test('parse simple model', async () => {
+        
         const model = `
             Issues:
             A
