@@ -1,14 +1,20 @@
 FROM gitpod/openvscode-server:latest
 
-# envs to locate binary
+# envs for OpenVSCode Server
 ENV OPENVSCODE_SERVER_ROOT=/home/.openvscode-server
-ENV OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
 
-# copying the extension vsix file to the image and setting proper ownership
-COPY --chown=openvscode-server:openvscode-server aurora-langium-*.vsix /tmp/aurora-langium.vsix
-# bake examples into the image (keep a copy outside workspace to avoid bind-mount hiding it)
-COPY --chown=openvscode-server:openvscode-server Examples/ /opt/aurora-examples/
+# copying extension vsix file into the image
+COPY --chown=openvscode-server:openvscode-server aurora-langium-*.vsix /extension.vsix
+
+# put example projects into the image
 COPY --chown=openvscode-server:openvscode-server Examples/ /home/workspace/Examples/
-# pre installing the extension
-RUN ${OPENVSCODE} --install-extension /tmp/aurora-langium.vsix \
-    && rm /tmp/aurora-langium.vsix
+
+# reinstall the extensions on container start
+ENTRYPOINT ["/bin/sh", "-c", "exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server \
+  --host 0.0.0.0 \
+  --port 3000 \
+  --without-connection-token \
+  --install-extension /extension.vsix \
+  --start-server \
+  \"$@\" \
+  ", "--"]
