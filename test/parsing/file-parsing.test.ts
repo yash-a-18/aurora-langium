@@ -4,8 +4,7 @@ import path from 'path';
 import { URI } from 'vscode-uri';
 import { NodeFileSystem } from 'langium/node';
 
-import { createAuroraServices } from '../../src/language/aurora-module.js';
-import { parseFromText } from '../../src/extension/src/parser/parser.js';
+import { createAuroraServices } from '../../src/language/aurora-module.js';     
 
 const __dirname = path.relative(process.cwd(), path.dirname(__filename));
 const fixturePath = path.resolve(__dirname, 'fixtures', 'simple-valid.aurora');
