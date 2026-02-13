@@ -53,8 +53,8 @@ ClinicalValue:
 /* Value Unit */
 SingleValueUnit :
     negative='(-)' ?
-    value=(ID | NUMBER | Float | Fraction | Boolean  )
-    unit=(ID | NUMBER | Float | Fraction | Boolean | '_'  )
+    value=(ID | NUMBER | Float | Fraction | Boolean | INCOMPLETENESS )
+    unit=(ID | NUMBER | Float | Fraction | Boolean | '_' | INCOMPLETENESS )
 ;
 
 Fraction returns string: NUMBER '/' NUMBER;
@@ -123,6 +123,8 @@ Time returns string: NUMBER ':' NUMBER ;
 QU: query=QUTERMINAL;
 
 Snomed:name=ID;
+
+terminal INCOMPLETENESS : '???';
 
 //For all PREFIX SINGLE the single quotes are mandatory
 terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )? ;

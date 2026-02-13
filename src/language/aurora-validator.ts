@@ -1,5 +1,5 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import type { AuroraAstType, IssueCoordinate } from './generated/ast.js';
+import type { AuroraAstType, IssueCoordinate, SingleValueUnit } from './generated/ast.js';
 import type { AuroraServices } from './aurora-module.js';
 
 /**
@@ -10,6 +10,7 @@ export function registerValidationChecks(services: AuroraServices) {
     const validator = services.validation.AuroraValidator;
     const checks: ValidationChecks<AuroraAstType> = {
         // IssueCoordinate: validator.checkIssueCoordinateStartsWithCapital
+        SingleValueUnit: validator.checkIncompleteness
     };
     registry.register(checks, validator);
 }
@@ -18,6 +19,26 @@ export function registerValidationChecks(services: AuroraServices) {
  * Implementation of custom validations.
  */
 export class AuroraValidator {
+
+    checkIncompleteness(svu: SingleValueUnit, accept: ValidationAcceptor): void {
+        const incompletenessMarker = '???';
+
+        // Check if the value is marked as incomplete
+        if (svu.value === incompletenessMarker) {
+            accept('warning', 'Value is marked as incomplete.', { 
+                node: svu, 
+                property: 'value' 
+            });
+        }
+
+        // Check if the unit is marked as incomplete
+        if (svu.unit === incompletenessMarker) {
+            accept('warning', 'Unit is marked as incomplete.', { 
+                node: svu, 
+                property: 'unit' 
+            });
+        }
+    }
 
     checkIssueCoordinateStartsWithCapital(issueCoordinate: IssueCoordinate, accept: ValidationAcceptor): void {
         if (issueCoordinate.name) {
