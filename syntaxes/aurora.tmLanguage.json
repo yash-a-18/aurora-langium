@@ -36,6 +36,10 @@
       "match": "[-][!][\\s\\S]*"
     },
     {
+      "name": "constant.language.incompleteness.aurora",
+      "match": "\\?\\?\\?"
+    },
+    {
       "name": "keyword.control.aurora",
       "match": "\\b(def|module|arith_module)\\b"
     },
