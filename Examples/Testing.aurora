@@ -1,8 +1,17 @@
-module: Thunder_Bay_Regional_CHF
+module: a
 
-Issues: a b
+Issues:
+a : a_issue
 
 Orders:
-ngo:
-a
-b
+General:
+  a0 (a) ?? note_a0;
+
+Investigations:
+  a1 (a) ?? note_a1;
+  a2 (a) ?? note_a2;
+
+Treatment:
+  b1 (a) !! step_b1;
+  b2 (a) ?? step_b2;
+  c1 (a) ?? step_c1;

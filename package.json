@@ -70,7 +70,7 @@
         "build:aurora-webview": "cd aurora-webview && npm i && npm run build",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
-        "langium:generate": "langium generate",
+        "langium:generate": "langium generate && node scripts/post-langium-generate.js",
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
         "test": "vitest run",
@@ -79,8 +79,8 @@
     "dependencies": {
         "chalk": "~5.3.0",
         "commander": "~11.0.0",
-        "langium": "~3.2.0",
-        "langium-sprotty": "^3.2.0",
+        "langium": "4.1.0",
+        "langium-sprotty": "4.1.0",
         "sprotty-elk": "^1.4.0",
         "sprotty-vscode": "^1.0.0",
         "sprotty-vscode-webview": "^1.0.0",
@@ -97,9 +97,14 @@
         "concurrently": "~8.2.1",
         "esbuild": "~0.20.2",
         "eslint": "~8.57.0",
-        "langium-cli": "~3.2.0",
+        "langium-cli": "4.1.0",
         "typescript": "~5.1.6",
         "vitest": "~1.4.0"
+    },
+    "overrides": {
+        "langium-sprotty": {
+            "langium": "4.1.0"
+        }
     },
     "volta": {
         "node": "18.19.1",
