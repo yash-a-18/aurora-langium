@@ -7,7 +7,20 @@ entry Arith_Module:
     '}';
 
 Statement:
-    Definition | Evaluation;
+    Definition | Evaluation | IfStatement;
+
+IfStatement:
+    'if' '(' condition=Expression ')'
+    thenBlock=Block
+    (
+      'else' (
+          elseIf=IfStatement |
+          elseBlock=Block
+      )
+    )?;
+
+Block:
+    '{' statements+=Statement* '}';
 
 Definition:
     'def' name=ID ('(' args+=DeclaredParameter (',' args+=DeclaredParameter)* ')')?
@@ -21,29 +34,28 @@ type AbstractDefinition = Definition | DeclaredParameter;
 Evaluation:
     expression=Expression ';';
 
+
 Expression:
-    Addition;
+    BinaryExpression;
 
-Addition infers Expression:
-    Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*;
 
-Multiplication infers Expression:
-    Exponentiation ({infer BinaryExpression.left=current} operator=('*' | '/') right=Exponentiation)*;
+infix BinaryExpression on PrimaryExpression:
+    '^'
+    > '*' | '/'
+    > '+' | '-'
+    > '%'
+    > '==' | '!=' | '<' | '>' | '<=' | '>=';
 
-Exponentiation infers Expression:
-    Modulo ({infer BinaryExpression.left=current} operator='^' right=Modulo)*;
-
-Modulo infers Expression:
-    PrimaryExpression ({infer BinaryExpression.left=current} operator='%' right=PrimaryExpression)*;
 
 PrimaryExpression infers Expression:
     '(' Expression ')' |
+    {infer BooleanLiteral} value=('true' | 'false') |
     {infer NumberLiteral} value=NUMBER |
     {infer FunctionCall} func=[AbstractDefinition] ('(' args+=Expression (',' args+=Expression)* ')')?;
 
+// --- Terminals ---
 hidden terminal ARITH_WS: /\s+/;
 terminal NUMBER returns number: /[0-9]+(\.[0-9]*)?/;
-// terminal ARITH_ID: /[_a-zA-Z][\w_]*/;
 terminal ID: /[a-zA-Z0-9_]+/;
 terminal INT: /[0-9]+/;
 hidden terminal ARITH_ML_COMMENT: /\/\*[\s\S]*?\*\//;
