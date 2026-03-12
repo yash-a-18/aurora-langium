@@ -56,6 +56,7 @@ PrimaryExpression infers Expression:
 // --- Terminals ---
 hidden terminal ARITH_WS: /\s+/;
 terminal NUMBER returns number: /[0-9]+(\.[0-9]*)?/;
+// terminal ARITH_ID: /[_a-zA-Z][\w_]*/;
 terminal ID: /[a-zA-Z0-9_]+/;
 terminal INT: /[0-9]+/;
 hidden terminal ARITH_ML_COMMENT: /\/\*[\s\S]*?\*\//;
