@@ -1,4 +1,5 @@
 import type { AstNode, LangiumCoreServices, LangiumDocument } from 'langium';
+import type { Diagnostic } from 'vscode-languageserver-types';
 import chalk from 'chalk';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
@@ -6,6 +7,16 @@ import { URI } from 'langium';
 
 
 
+
+export class DocumentValidationError extends Error {
+    constructor(
+        message: string,
+        public readonly document: LangiumDocument,
+        public readonly diagnostics: Diagnostic[]
+    ) {
+        super(message);
+    }
+}
 
 export async function extractDocument(fileName: string, services: LangiumCoreServices): Promise<LangiumDocument> {
     const extensions = services.LanguageMetaData.fileExtensions;
@@ -24,13 +35,12 @@ export async function extractDocument(fileName: string, services: LangiumCoreSer
 
     const validationErrors = (document.diagnostics ?? []).filter(e => e.severity === 1);
     if (validationErrors.length > 0) {
-        console.error(chalk.red('There are validation errors:'));
-        for (const validationError of validationErrors) {
-            console.error(chalk.red(
-                `line ${validationError.range.start.line + 1}: ${validationError.message} [${document.textDocument.getText(validationError.range)}]`
-            ));
-        }
-        process.exit(1);
+        const errorLines = validationErrors.map(validationError =>
+            `line ${validationError.range.start.line + 1}: ${validationError.message} ` +
+            `[${document.textDocument.getText(validationError.range)}]`
+        );
+        const message = ['There are validation errors:', ...errorLines].join('\n');
+        throw new DocumentValidationError(message, document, validationErrors);
     }
 
     return document;

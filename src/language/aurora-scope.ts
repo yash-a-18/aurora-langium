@@ -4,119 +4,101 @@
  * terms of the MIT License, which is available in the project root.
  ******************************************************************************/
 
-import { DefaultScopeComputation, MultiMap, AstUtils } from 'langium'
+import { AstUtils, DefaultScopeComputation, DefaultScopeProvider, MultiMap } from 'langium';
+import type { AstNode, AstNodeDescription, LangiumDocument, LocalSymbols } from 'langium';
+import { isClinicalCoordinate, isDefinition, isIssueCoordinate, isMODULE, isOrderCoordinate } from './generated/ast.js';
+import type { PCM } from './generated/ast.js';
+import type { AuroraServices } from './aurora-module.js';
 
-import type {AstNode,AstNodeDescription,LangiumDocument,PrecomputedScopes} from 'langium'
-import { isIssueCoordinate,isMODULE,isOrderCoordinate, isClinicalCoordinate} from './generated/ast.js'
-import type { PCM } from './generated/ast.js'
-import { AuroraServices } from './aurora-module.js'
+export class AuroraScopeProvider extends DefaultScopeProvider {}
 
 export class AuroraScopeComputation extends DefaultScopeComputation {
 
-  constructor(services:AuroraServices) {
-    super(services)
-  }
-
-  override async computeExports(
-    document: LangiumDocument
-  ): Promise<AstNodeDescription[]> {
-    const exportedDescriptions: AstNodeDescription[] = []
-
-    for (const childNode of AstUtils.streamAllContents(document.parseResult.value)) {
-      if (isClinicalCoordinate(childNode) && childNode.name) {
-        exportedDescriptions.push(
-          this.descriptions.createDescription(
-            childNode,
-            childNode.name,
-            document
-          )
-        )
-      }
-      if (isIssueCoordinate(childNode) && childNode.name) {
-        exportedDescriptions.push(
-          this.descriptions.createDescription(
-            childNode,
-            childNode.name,
-            document
-          )
-        )
-      }
-      if (isOrderCoordinate(childNode) && childNode.name) {
-        exportedDescriptions.push(
-          this.descriptions.createDescription(
-            childNode,
-            childNode.name,
-            document
-          )
-        )
-      }
-      if (isMODULE(childNode) && childNode.name) {
-        exportedDescriptions.push(
-          this.descriptions.createDescription(
-            childNode,
-            childNode.name,
-            document
-          )
-        )
-      }
+    constructor(services: AuroraServices) {
+        super(services);
     }
-    return exportedDescriptions
-  }
 
-  override async computeLocalScopes(
-    document: LangiumDocument
-  ): Promise<PrecomputedScopes> {
-    const model = document.parseResult.value as PCM
-    const scopes = new MultiMap<AstNode, AstNodeDescription>()
-    this.processContainer(model, scopes, document)
-    return scopes
-  }
+    override async collectExportedSymbols(document: LangiumDocument): Promise<AstNodeDescription[]> {
+        const exportedDescriptions = await super.collectExportedSymbols(document);
+        const existing = new Set(exportedDescriptions.map(descriptionKey));
 
-  private processContainer(
-    container: PCM,
-    scopes: PrecomputedScopes,
-    document: LangiumDocument
-  ): AstNodeDescription[] {
-    const localDescriptions: AstNodeDescription[] = []
-    for (const element of AstUtils.streamAllContents(container)) {
-      if (isClinicalCoordinate(element) && element.name) {
-        localDescriptions.push(
-          this.descriptions.createDescription(
-            element,
-            element.name,
-            document
-          )
-        )
-      }
-      if (isIssueCoordinate(element) && element.name) {
-        localDescriptions.push(
-          this.descriptions.createDescription(
-            element,
-            element.name,
-            document
-          )
-        )
-      }
-      if (isOrderCoordinate(element) && element.name) {
-        localDescriptions.push(
-          this.descriptions.createDescription(
-            element,
-            element.name,
-            document
-          )
-        )
-      }
-      if (isMODULE(element) && element.name) {
-        localDescriptions.push(
-          this.descriptions.createDescription(
-            element,
-            element.name,
-            document
-          )
-        )
-      }
+        for (const childNode of AstUtils.streamAllContents(document.parseResult.value)) {
+            if (isClinicalCoordinate(childNode) && childNode.name) {
+                const desc = this.descriptions.createDescription(childNode, childNode.name, document);
+                addIfMissing(exportedDescriptions, existing, desc);
+            }
+            if (isIssueCoordinate(childNode) && childNode.name) {
+                const desc = this.descriptions.createDescription(childNode, childNode.name, document);
+                addIfMissing(exportedDescriptions, existing, desc);
+            }
+            if (isOrderCoordinate(childNode) && childNode.name) {
+                const desc = this.descriptions.createDescription(childNode, childNode.name, document);
+                addIfMissing(exportedDescriptions, existing, desc);
+            }
+            if (isMODULE(childNode) && childNode.name) {
+                const desc = this.descriptions.createDescription(childNode, childNode.name, document);
+                addIfMissing(exportedDescriptions, existing, desc);
+            }
+            if (isDefinition(childNode) && typeof childNode.name === 'string' && childNode.name.endsWith(':')) {
+                const desc = this.descriptions.createDescription(
+                    childNode,
+                    normalizeDefinitionName(childNode.name),
+                    document
+                );
+                addIfMissing(exportedDescriptions, existing, desc);
+            }
+        }
+
+        return exportedDescriptions;
     }
-    scopes.addAll(container, localDescriptions)
-    return localDescriptions
-  }
+
+    override async collectLocalSymbols(document: LangiumDocument): Promise<LocalSymbols> {
+        const symbols = await super.collectLocalSymbols(document) as MultiMap<AstNode, AstNodeDescription>;
+        const model = document.parseResult.value as PCM;
+
+        const localDescriptions: AstNodeDescription[] = [];
+        for (const element of AstUtils.streamAllContents(model)) {
+            if (isClinicalCoordinate(element) && element.name) {
+                localDescriptions.push(this.descriptions.createDescription(element, element.name, document));
+            }
+            if (isIssueCoordinate(element) && element.name) {
+                localDescriptions.push(this.descriptions.createDescription(element, element.name, document));
+            }
+            if (isOrderCoordinate(element) && element.name) {
+                localDescriptions.push(this.descriptions.createDescription(element, element.name, document));
+            }
+            if (isMODULE(element) && element.name) {
+                localDescriptions.push(this.descriptions.createDescription(element, element.name, document));
+            }
+            if (isDefinition(element) && typeof element.name === 'string' && element.name.endsWith(':')) {
+                localDescriptions.push(
+                    this.descriptions.createDescription(
+                        element,
+                        normalizeDefinitionName(element.name),
+                        document
+                    )
+                );
+            }
+        }
+
+        symbols.addAll(model, localDescriptions);
+        return symbols;
+    }
+}
+
+function addIfMissing(collection: AstNodeDescription[], index: Set<string>, description: AstNodeDescription): void {
+    const key = descriptionKey(description);
+    if (index.has(key)) {
+        return;
+    }
+    collection.push(description);
+    index.add(key);
+}
+
+function descriptionKey(description: AstNodeDescription): string {
+    return `${description.name}|${description.type}|${description.documentUri.toString()}|${description.path}`;
+}
+
+function normalizeDefinitionName(name: string): string {
+    return name.endsWith(':') ? name.slice(0, -1) : name;
 }

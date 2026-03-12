@@ -15,8 +15,10 @@ PACKAGE:'package' name=QualifiedName  ';';
 Import: 'import' importedNamespace=QualifiedNameWithWildcard  ';';
 QualifiedNameWithWildcard returns string: QualifiedName '.*'?;
 QualifiedName returns string: ID ('.' ID )*;
+
 NL_STATEMENT:
     name=( NL_STATEMENTMULTI | SINGLENL  );
+
 Clinical:
 'Clinical:'
 narrative+=NL_STATEMENT*
@@ -118,7 +120,8 @@ MutuallyExclusive:
 TEMPLATE: "template" name=ID  elements+=(Clinical |  Orders)*;
 MODULE:   "module:"  name=ID  elements+=(Issues |  Orders)*;
 
-AuroraDate returns string:NUMBER '/' NUMBER '/' NUMBER  | NUMBER | NUMBER '/' NUMBER;
+AuroraDate returns string:NUMBER '/' NUMBER '/' NUMBER  |
+NUMBER | NUMBER '/' NUMBER;
 Time returns string: NUMBER ':' NUMBER ;
 QU: query=QUTERMINAL;
 
@@ -127,11 +130,10 @@ Snomed:name=ID;
 terminal INCOMPLETENESS : '???';
 
 //For all PREFIX SINGLE the single quotes are mandatory
-terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )? ;
-// For all PREFIX MULTI the single quotes are optional but semi-colon at the end is mandatory
+terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )?
+;
+// For all PREFIX MULTI the a optional but semi-colon at the end is mandatory
 terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
-
-
 terminal NL_STATEMENTMULTI returns string: PREFIXMULTI -> /[^\n]*;/;
 terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
