@@ -4,8 +4,10 @@ import { createConnection, ProposedFeatures } from 'vscode-languageserver/node.j
 import { createAuroraServices } from './aurora-module.js';
 import { addDiagramHandler, type LangiumSprottySharedServices } from 'langium-sprotty';
 
+// Create a connection to the client
 const connection = createConnection(ProposedFeatures.all);
 
+// Add error handling
 connection.console.error = error => {
     console.error('Connection error:', error);
 };
@@ -16,8 +18,10 @@ process.on('uncaughtException', error => {
 });
 
 try {
+    // Inject the shared services and language-specific services
     const { shared } = createAuroraServices({ connection, ...NodeFileSystem });
 
+    // Start the language server with the shared services
     console.log('Starting language server...');
     startLanguageServer(shared);
     addDiagramHandler(connection, shared as LangiumSprottySharedServices);
