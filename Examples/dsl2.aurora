@@ -5,7 +5,7 @@ ic4
 
 Orders:
 NGO1:
-OC1 (ic4) -comment
+OC1 (ic4) --comment;
 OC0 (ic4)
 
 NGO2:

@@ -25,17 +25,17 @@ export class AuroraValidator {
 
         // Check if the value is marked as incomplete
         if (svu.value === incompletenessMarker) {
-            accept('warning', 'Value is marked as incomplete.', { 
-                node: svu, 
-                property: 'value' 
+            accept('warning', 'Value is marked as incomplete.', {
+                node: svu,
+                property: 'value'
             });
         }
 
         // Check if the unit is marked as incomplete
         if (svu.unit === incompletenessMarker) {
-            accept('warning', 'Unit is marked as incomplete.', { 
-                node: svu, 
-                property: 'unit' 
+            accept('warning', 'Unit is marked as incomplete.', {
+                node: svu,
+                property: 'unit'
             });
         }
     }
