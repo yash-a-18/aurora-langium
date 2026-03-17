@@ -1,0 +1,4 @@
+repo,repo_url,sha,author_name,author_email,author_date,summary,body
+saki-aurora/aurora-langium-saki.git,https://github.com/saki-aurora/aurora-langium-saki.git,21fba9bd19f54fae1d86388b0615a3e8615ee9b1,saki-aurora,skaushi1@lakeheadu.ca,2025-10-30 15:42:01 -0400,Add cross ref,
+saki-aurora/aurora-langium-saki.git,https://github.com/saki-aurora/aurora-langium-saki.git,217ce4b147ff48217794440188696e32a201d4c5,saki-aurora,skaushi1@lakeheadu.ca,2025-10-30 04:14:28 -0400,add file level test for DSL,
+saki-aurora/aurora-langium-saki.git,https://github.com/saki-aurora/aurora-langium-saki.git,448efd057b26f90323b0a5209329a34d6196b6ba,saki-aurora,skaushi1@lakeheadu.ca,2025-10-28 14:34:00 -0400,add parse tests,
