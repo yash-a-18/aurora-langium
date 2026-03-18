@@ -5,9 +5,6 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { URI } from 'langium';
 
-
-
-
 export class DocumentValidationError extends Error {
     constructor(
         message: string,
@@ -30,8 +27,30 @@ export async function extractDocument(fileName: string, services: LangiumCoreSer
         process.exit(1);
     }
 
-    const document = await services.shared.workspace.LangiumDocuments.getOrCreateDocument(URI.file(path.resolve(fileName)));
-    await services.shared.workspace.DocumentBuilder.build([document], { validation: true });
+    // --- NEW LOGIC: Load all files in the directory for linking ---
+    const absolutePath = path.resolve(fileName);
+    const targetDir = path.dirname(absolutePath);
+
+    const allFilesInDir = fs.readdirSync(targetDir);
+    const languageFiles = allFilesInDir
+        .filter(file => extensions.includes(path.extname(file)))
+        .map(file => path.join(targetDir, file));
+
+    const documents = await Promise.all(
+        languageFiles.map(file => services.shared.workspace.LangiumDocuments.getOrCreateDocument(URI.file(file)))
+    );
+
+    await services.shared.workspace.DocumentBuilder.build(documents, { validation: true });
+
+    // Retrieve the specific document requested
+    const targetUri = URI.file(absolutePath);
+    const document = services.shared.workspace.LangiumDocuments.getDocument(targetUri);
+
+    if (!document) {
+        console.error(chalk.red(`Failed to retrieve document for ${fileName}.`));
+        process.exit(1);
+    }
+    // --------------------------------------------------------------
 
     const validationErrors = (document.diagnostics ?? []).filter(e => e.severity === 1);
     if (validationErrors.length > 0) {
