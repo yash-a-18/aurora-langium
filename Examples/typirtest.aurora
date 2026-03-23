@@ -1,0 +1,3 @@
+arith_module test {
+  2 + 3;
+}

@@ -63,7 +63,6 @@
             "require": "./dist/cjs/language/aurora-diagram-generator.cjs",
             "types": "./dist/types/src/language/aurora-diagram-generator.d.ts"
         }
-
     },
     "types": "dist/types/index.d.ts",
     "scripts": {
@@ -85,6 +84,8 @@
         "sprotty-elk": "^1.4.0",
         "sprotty-vscode": "^1.0.0",
         "sprotty-vscode-webview": "^1.0.0",
+        "typir": "^0.3.3",
+        "typir-langium": "^0.3.3",
         "vscode-languageclient": "~9.0.1",
         "vscode-languageserver": "~9.0.1"
     },
@@ -153,11 +154,29 @@
             ]
         },
         "commands": [
-            { "command": "aurora.focus", "title": "Focus Aurora Diagram", "category": "Aurora" },
-            { "command": "aurora.diagram.open", "title": "Open Aurora Diagram", "category": "Aurora Diagram" },
-            { "command": "aurora.diagram.toggleLayout","title": "Toggle Aurora Diagram Layout","icon": "$(activate-breakpoints)" },
-            {"command": "filter.test", "title": "testing filtering on the diagram"},
-            {"command": "diagram.revealSelectedElementRange", "title": "testing select actions"}
+            {
+                "command": "aurora.focus",
+                "title": "Focus Aurora Diagram",
+                "category": "Aurora"
+            },
+            {
+                "command": "aurora.diagram.open",
+                "title": "Open Aurora Diagram",
+                "category": "Aurora Diagram"
+            },
+            {
+                "command": "aurora.diagram.toggleLayout",
+                "title": "Toggle Aurora Diagram Layout",
+                "icon": "$(activate-breakpoints)"
+            },
+            {
+                "command": "filter.test",
+                "title": "testing filtering on the diagram"
+            },
+            {
+                "command": "diagram.revealSelectedElementRange",
+                "title": "testing select actions"
+            }
         ]
     },
     "activationEvents": [
