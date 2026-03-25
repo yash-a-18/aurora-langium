@@ -10,6 +10,16 @@ entry PCM:
     elements+=(Issues |  Orders | Clinical | Arith_Module | Evaluation)*
 ;
 
+interface NamedGroupClinical {
+    name: string
+    timestamp?: TimeStamp
+    qurc?: QuReferences
+    narrative: NL_STATEMENT[]
+    coord: ClinicalEntry[]
+}
+
+type ReferenceCoordinate = IssueCoordinate | OrderCoordinate | ClinicalCoordinate;
+
 /* Package and Import */
 PACKAGE:'package' name=QualifiedName  ';';
 Import: 'import' importedNamespace=QualifiedNameWithWildcard  ';';
@@ -24,30 +34,26 @@ Clinical:
 narrative+=NL_STATEMENT*
 namedGroups+=NamedGroupClinical*;
 
-NamedGroupClinical:
+NamedGroupClinical returns NamedGroupClinical:
     name=ID_WITH_COLON
-    timestamp=TimeStamp ?
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
-    coord+=(ClinicalCoordinate | ClinicalValue  )*
+    (coord+=ClinicalEntry)*
 ;
 
-ClinicalCoordinate:
+ClinicalEntry:
     qu+=QU *
     timestamp=TimeStamp ?
     name=ID
-    qurc = QuReferences?
-    narrative+=NL_STATEMENT *
-;
-
-ClinicalValue:
-    qu+=QU *
-    timestamp=TimeStamp ?
-    name=ID
-    '['
-    values+=SingleValueUnit
-    (',' values+=SingleValueUnit  )*
-    ']'
+    (
+        {infer ClinicalValue}
+        '['
+        values+=SingleValueUnit
+        (',' values+=SingleValueUnit  )*
+        ']'
+        |
+        {infer ClinicalCoordinate}
+    )
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
@@ -83,8 +89,6 @@ IssueCoordinate:
     narrative+=NL_STATEMENT*
 ;
 
-ReferenceCoordinate: (IssueCoordinate | OrderCoordinate | ClinicalCoordinate);
-
 QuReference:
     qu += QU*
     ref = [ReferenceCoordinate:ID];
@@ -103,7 +107,10 @@ NamedGroupOrder:
     name=ID_WITH_COLON
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
-    (orders+=(OrderCoordinate | MutuallyExclusive))*;
+    (orders+=OrderItem)*;
+
+OrderItem:
+    OrderCoordinate ({infer MutuallyExclusive.order1=current} 'or' order2=OrderCoordinate)?;
 
 OrderCoordinate:
     comment+= ML_COMMENT*
@@ -111,10 +118,6 @@ OrderCoordinate:
     name=ID
     qurc = QuReferences?
     narrative+= NL_STATEMENT* ;
-
-MutuallyExclusive:
-    comment+= ML_COMMENT*
-    order1=OrderCoordinate 'or' order2=OrderCoordinate;
 
 /* Template and Module */
 TEMPLATE: "template" name=ID  elements+=(Clinical |  Orders)*;

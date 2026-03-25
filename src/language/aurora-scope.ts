@@ -9,6 +9,7 @@ import type { AstNode, AstNodeDescription, LangiumDocument, LocalSymbols } from 
 import { isClinicalCoordinate, isDefinition, isIssueCoordinate, isMODULE, isOrderCoordinate } from './generated/ast.js';
 import type { PCM } from './generated/ast.js';
 import type { AuroraServices } from './aurora-module.js';
+import { normalizeClinicalGroupTimestamps } from './aurora-document-normalizer.js';
 
 export class AuroraScopeProvider extends DefaultScopeProvider {}
 
@@ -19,6 +20,7 @@ export class AuroraScopeComputation extends DefaultScopeComputation {
     }
 
     override async collectExportedSymbols(document: LangiumDocument): Promise<AstNodeDescription[]> {
+        normalizeClinicalGroupTimestamps(document);
         const exportedDescriptions = await super.collectExportedSymbols(document);
         const existing = new Set(exportedDescriptions.map(descriptionKey));
 

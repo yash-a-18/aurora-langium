@@ -30,7 +30,19 @@ export async function extractDocument(fileName: string, services: LangiumCoreSer
         process.exit(1);
     }
 
-    const document = await services.shared.workspace.LangiumDocuments.getOrCreateDocument(URI.file(path.resolve(fileName)));
+    const absolutePath = path.resolve(fileName);
+    const targetDirectory = path.dirname(absolutePath);
+
+    await services.shared.workspace.WorkspaceManager.initializeWorkspace([
+        {
+            name: path.basename(targetDirectory) || targetDirectory,
+            uri: URI.file(targetDirectory).toString()
+        }
+    ]);
+
+    const targetUri = URI.file(absolutePath);
+    const document = await services.shared.workspace.LangiumDocuments.getOrCreateDocument(targetUri);
+
     await services.shared.workspace.DocumentBuilder.build([document], { validation: true });
 
     const validationErrors = (document.diagnostics ?? []).filter(e => e.severity === 1);
