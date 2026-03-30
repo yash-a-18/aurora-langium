@@ -1,0 +1,49 @@
+arith_module typirtests
+{
+    def add(a, b): a + b;
+    def multiply(a, b): a * b;
+
+    add(2, 3);
+    multiply(3, 4);
+    add(10, 5);
+
+    true;
+    false;
+
+    1 == 1;
+    2 != 3;
+    3 < 5;
+    5 > 3;
+    4 <= 4;
+    6 >= 5;
+
+    if (true) {
+        add(1, 2);
+    }
+
+    if (false) {
+        multiply(2, 2);
+    }
+
+    if (1 == 1) {
+        add(3, 3);
+    }
+
+    if (2 < 5) {
+        multiply(2, 3);
+    }
+
+    if (true) {
+        add(4, 4);
+    } else {
+        multiply(1, 1);
+    }
+
+    if (false) {
+        add(0, 0);
+    } else if (true) {
+        multiply(2, 5);
+    } else {
+        add(1, 1);
+    }
+}
