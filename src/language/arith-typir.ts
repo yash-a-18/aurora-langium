@@ -1,6 +1,6 @@
 import { createTypirServices } from 'typir';
 import type { AstNode } from 'langium';
-import { isNumberLiteral, isBinaryExpression, isFunctionCall } from './generated/ast.js';
+import { isNumberLiteral, isBinaryExpression, isFunctionCall,isDeclaredParameter} from './generated/ast.js';
 
 
 export const typir = createTypirServices();
@@ -14,6 +14,10 @@ typir.Inference.addInferenceRule((node: AstNode) => {
     if (isNumberLiteral(node)) {
         return numberType;
     }
+
+    if (isDeclaredParameter(node)) {
+    return numberType;
+}
 
     if (isBinaryExpression(node)) {
 
@@ -30,8 +34,8 @@ typir.Inference.addInferenceRule((node: AstNode) => {
 
     if (!funcDef) return;
 
-    return undefined; 
-}
+        return numberType; 
+    }
    return numberType;
 }
 );
