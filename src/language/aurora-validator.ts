@@ -1,9 +1,9 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
 import { type AuroraAstType, type IssueCoordinate, type SingleValueUnit, type BinaryExpression, isDefinition } from './generated/ast.js';
 import type { AuroraServices } from './aurora-module.js';
-import { typir, numberType } from './arith-typir.js';
+import { typir, numberType, booleanType } from './arith-typir.js';
 import type { FunctionCall } from './generated/ast.js';
-
+import type { IfStatement } from './generated/ast.js';
 
 /**
  * Register custom validation checks.
@@ -15,7 +15,8 @@ export function registerValidationChecks(services: AuroraServices) {
         // IssueCoordinate: validator.checkIssueCoordinateStartsWithCapital
         SingleValueUnit: validator.checkIncompleteness,
         BinaryExpression: validator.checkBinaryExpression,
-        FunctionCall: validator.checkFunctionCall
+        FunctionCall: validator.checkFunctionCall,
+        IfStatement: validator.checkIfStatement
     };
     registry.register(checks, validator);
 }
@@ -26,14 +27,51 @@ export function registerValidationChecks(services: AuroraServices) {
 export class AuroraValidator {
 
     checkBinaryExpression(expr: BinaryExpression, accept: ValidationAcceptor): void {
+
         const leftType = typir.Inference.inferType(expr.left);
         const rightType = typir.Inference.inferType(expr.right);
 
-        if (leftType !== numberType || rightType !== numberType) {
-            accept('error', 'Binary operation requires numbers.', {
-                node: expr
-            });
+        if (!leftType || !rightType) return;
+
+        // =========================
+        // 1. Comparison operators → boolean
+        // =========================
+        const COMPARISON_OPS = new Set(['==', '!=', '<', '>', '<=', '>=']);
+
+        if (COMPARISON_OPS.has(expr.operator)) {
+
+            // comparisons must have same type (or at least compatible)
+            if (leftType !== rightType) {
+                accept('error', 'Comparison requires matching operand types.', {
+                    node: expr
+                });
+            }
+
+            return;
         }
+
+        // =========================
+        // 2. Arithmetic operators → number
+        // =========================
+        const ARITHMETIC_OPS = new Set(['+', '-', '*', '/', '%', '^']);
+
+        if (ARITHMETIC_OPS.has(expr.operator)) {
+
+            if (leftType !== numberType || rightType !== numberType) {
+                accept('error', 'Arithmetic operation requires numbers.', {
+                    node: expr
+                });
+            }
+
+            return;
+        }
+
+        // =========================
+        // 3. Unknown operator fallback
+        // =========================
+        accept('error', `Unknown operator: ${expr.operator}`, {
+            node: expr
+        });
     }
 
     checkFunctionCall(call: FunctionCall, accept: ValidationAcceptor): void {
@@ -82,6 +120,20 @@ export class AuroraValidator {
         }
     }
 
+    checkIfStatement(stmt: IfStatement, accept: ValidationAcceptor): void {
+
+        const conditionType = typir.Inference.inferType(stmt.condition);
+
+        // safety check
+        if (!conditionType) return;
+
+        if (conditionType !== booleanType) {
+            accept('error', 'If condition must be a boolean.', {
+                node: stmt,
+                property: 'condition'
+            });
+        }
+    }
     checkIncompleteness(svu: SingleValueUnit, accept: ValidationAcceptor): void {
         const incompletenessMarker = '???';
 

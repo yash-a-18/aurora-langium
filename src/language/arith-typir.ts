@@ -7,6 +7,7 @@ import {
     isDeclaredParameter,
     isBooleanLiteral,
     isIfStatement,
+    isDefinition,
 } from './generated/ast.js';
 
 export const typir = createTypirServices();
@@ -51,8 +52,14 @@ typir.Inference.addInferenceRule((node: AstNode) => {
 
     if (isFunctionCall(node)) {
         const funcDef = node.func?.ref;
-        if (!funcDef) return undefined;
-        return numberType;
+        if (!funcDef|| !isDefinition(funcDef)){ 
+            return undefined;
+        }
+        //Handles infinite recursion
+        if (funcDef.expr === node) {
+        return undefined;
+    }
+        return typir.Inference.inferType(funcDef.expr);
     }
 
     if (isIfStatement(node)) {
