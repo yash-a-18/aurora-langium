@@ -21,6 +21,24 @@ export const booleanType = typir.factory.Primitives
     .finish();
 
 const COMPARISON_OPS = new Set(['==', '!=', '<', '>', '<=', '>=']);
+const activeDefinitions = new Set<AstNode>();
+
+function inferDefinitionType(node: AstNode) {
+    if (!isDefinition(node)) {
+        return undefined;
+    }
+
+    if (activeDefinitions.has(node)) {
+        return undefined;
+    }
+
+    activeDefinitions.add(node);
+    try {
+        return typir.Inference.inferType(node.expr);
+    } finally {
+        activeDefinitions.delete(node);
+    }
+}
 
 typir.Inference.addInferenceRule((node: AstNode) => {
 
@@ -51,15 +69,16 @@ typir.Inference.addInferenceRule((node: AstNode) => {
     }
 
     if (isFunctionCall(node)) {
-        const funcDef = node.func?.ref;
-        if (!funcDef|| !isDefinition(funcDef)){ 
+        const referenceTarget = node.func?.ref;
+        if (!referenceTarget) {
             return undefined;
         }
-        //Handles infinite recursion
-        if (funcDef.expr === node) {
-        return undefined;
-    }
-        return typir.Inference.inferType(funcDef.expr);
+
+        if (isDeclaredParameter(referenceTarget)) {
+            return numberType;
+        }
+
+        return inferDefinitionType(referenceTarget);
     }
 
     if (isIfStatement(node)) {
@@ -67,5 +86,5 @@ typir.Inference.addInferenceRule((node: AstNode) => {
         return undefined;
     }
 
-    return numberType;
+    return undefined;
 });
