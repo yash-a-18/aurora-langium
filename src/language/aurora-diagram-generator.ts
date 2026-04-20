@@ -59,7 +59,7 @@ export class AuroraDiagramGenerator extends LangiumDiagramGenerator {
         let ic : IssueCoordinate [] = sm.elements.filter(x => x.$type == "Issues").map(i => (i as Issues)).flatMap(x => x.coord)
         let ngo : NamedGroupOrder [] = sm.elements.filter(x => x.$type == "Orders").map(i => (i as Orders)).flatMap(x => x.namedGroups)
         let oc = ngo.filter(x=> this.ngoFilter.indexOf(x.name.replace(":","").trim()) === -1).flatMap(n=>n.orders).filter(x=> x.$type =="OrderCoordinate").map(x=>x as OrderCoordinate)
-        let nar = listOfNarratives(sm).filter(x => x.$container.$type != "ClinicalCoordinate" && x.$container.$type != "NamedGroupOrder" && x.$container.$type != "NamedGroupClinical")
+        let nar = listOfNarratives(sm).filter(x => x.$container.$type != "ClinicalItem" && x.$container.$type != "NamedGroupOrder" && x.$container.$type != "NamedGroupClinical")
         
         return {
             type: 'graph',

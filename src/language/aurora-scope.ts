@@ -6,7 +6,7 @@
 
 import { AstUtils, DefaultScopeComputation, DefaultScopeProvider, MultiMap } from 'langium';
 import type { AstNode, AstNodeDescription, LangiumDocument, LocalSymbols } from 'langium';
-import { isClinicalCoordinate, isDefinition, isIssueCoordinate, isMODULE, isOrderCoordinate } from './generated/ast.js';
+import { isClinicalItem, isDefinition, isIssueCoordinate, isMODULE, isOrderCoordinate } from './generated/ast.js';
 import type { PCM } from './generated/ast.js';
 import type { AuroraServices } from './aurora-module.js';
 
@@ -23,7 +23,7 @@ export class AuroraScopeComputation extends DefaultScopeComputation {
         const existing = new Set(exportedDescriptions.map(descriptionKey));
 
         for (const childNode of AstUtils.streamAllContents(document.parseResult.value)) {
-            if (isClinicalCoordinate(childNode) && childNode.name) {
+            if (isClinicalItem(childNode) && childNode.name) {
                 const desc = this.descriptions.createDescription(childNode, childNode.name, document);
                 addIfMissing(exportedDescriptions, existing, desc);
             }
@@ -58,7 +58,7 @@ export class AuroraScopeComputation extends DefaultScopeComputation {
 
         const localDescriptions: AstNodeDescription[] = [];
         for (const element of AstUtils.streamAllContents(model)) {
-            if (isClinicalCoordinate(element) && element.name) {
+            if (isClinicalItem(element) && element.name) {
                 localDescriptions.push(this.descriptions.createDescription(element, element.name, document));
             }
             if (isIssueCoordinate(element) && element.name) {

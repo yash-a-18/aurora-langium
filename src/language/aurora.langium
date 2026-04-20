@@ -26,28 +26,17 @@ namedGroups+=NamedGroupClinical*;
 
 NamedGroupClinical:
     name=ID_WITH_COLON
-    timestamp=TimeStamp ?
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
-    coord+=(ClinicalCoordinate | ClinicalValue  )*
+    coord+=ClinicalItem*
 ;
 
-ClinicalCoordinate:
+ClinicalItem:
     qu+=QU *
     timestamp=TimeStamp ?
     name=ID
-    qurc = QuReferences?
-    narrative+=NL_STATEMENT *
-;
-
-ClinicalValue:
-    qu+=QU *
-    timestamp=TimeStamp ?
-    name=ID
-    '['
-    values+=SingleValueUnit
-    (',' values+=SingleValueUnit  )*
-    ']'
+    // The bracketed values are simply optional now!
+    ('[' values+=SingleValueUnit (',' values+=SingleValueUnit)* ']')?
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
 ;
@@ -83,7 +72,7 @@ IssueCoordinate:
     narrative+=NL_STATEMENT*
 ;
 
-ReferenceCoordinate: (IssueCoordinate | OrderCoordinate | ClinicalCoordinate);
+ReferenceCoordinate: (IssueCoordinate | OrderCoordinate | ClinicalItem);
 
 QuReference:
     qu += QU*
@@ -103,7 +92,13 @@ NamedGroupOrder:
     name=ID_WITH_COLON
     qurc = QuReferences?
     narrative+=NL_STATEMENT *
-    (orders+=(OrderCoordinate | MutuallyExclusive))*;
+    orders+=OrderElement*
+;
+
+// This rule handles both single orders and mutually exclusive ones!
+OrderElement:
+    OrderCoordinate ({infer MutuallyExclusive.order1=current} 'or' order2=OrderCoordinate)?
+;
 
 OrderCoordinate:
     comment+= ML_COMMENT*
@@ -111,10 +106,6 @@ OrderCoordinate:
     name=ID
     qurc = QuReferences?
     narrative+= NL_STATEMENT* ;
-
-MutuallyExclusive:
-    comment+= ML_COMMENT*
-    order1=OrderCoordinate 'or' order2=OrderCoordinate;
 
 /* Template and Module */
 TEMPLATE: "template" name=ID  elements+=(Clinical |  Orders)*;
