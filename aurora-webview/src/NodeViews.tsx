@@ -199,6 +199,19 @@ export class OrderCoordinateNodeView extends ShapeView {
 }
 
 @injectable()
+export class OrderElementView extends ShapeView {
+    render(node: Readonly<SNodeImpl>, context: RenderingContext): VNode {
+        return <g>
+            <rect x={0} y={0} width={Math.max(node.bounds.width, 50)} height={Math.max(node.bounds.height, 30)} class-aurora-node={true} />
+            <text x={node.bounds.width / 2} y={node.bounds.height / 2 + 5} class-aurora-text={true}>
+                {node.id.split(':').pop()}
+            </text>
+            {context.renderChildren(node)}
+        </g>;
+    }
+}
+
+@injectable()
 export class OrderCoordinateSelectedNodeView extends ShapeView {
     render(node: Readonly<SShapeElementImpl & Hoverable & Selectable>, context: RenderingContext, args?: IViewArgs): VNode | undefined {
         if (!this.isVisible(node, context)) {
