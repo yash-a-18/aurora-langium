@@ -125,7 +125,7 @@ terminal PREFIXSINGLE : ('-') ('?' | '!' | '.' | 'x' )?
 ;
 // For all PREFIX MULTI the a optional but semi-colon at the end is mandatory
 terminal PREFIXMULTI :('--' | '??' | '!!' | '..' | 'xx' );
-terminal NL_STATEMENTMULTI returns string: PREFIXMULTI -> /[^\n]*;/;
+terminal NL_STATEMENTMULTI returns string: PREFIXMULTI /[^\n;]*;/;
 terminal ID_WITH_COLON: /[a-zA-Z_][a-zA-Z0-9_]*:/;
 // terminal ID: /[a-zA-Z0-9_]+/;
 terminal SINGLENL returns string: PREFIXSINGLE -> /'[^\n]*'/;
