@@ -3,7 +3,6 @@ import { HIDE_NGOS_ACTION_KIND, HideNGOsAction } from '../../../../shared/utils.
 import { NamedGroupOrder, OrderCoordinate, Orders, PCM } from '../../../language/generated/ast.js';
 import { LanguageClientConfigSingleton } from '../../langclientconfig.js';
 
-
 export function hideNGOs(pcm: PCM, langConfig: LanguageClientConfigSingleton) {
     let quickPick = vscode.window.createQuickPick();
     quickPick.placeholder = 'Choose which NGOs to hide...';
@@ -16,16 +15,12 @@ export function hideNGOs(pcm: PCM, langConfig: LanguageClientConfigSingleton) {
     quickPick.onDidChangeSelection(selection => {
         if (selection && selection.length > 0) {
             const selectedLabels = selection.map(s => s.label.trim());
-            console.log('selectedLabels:', selectedLabels);
-
             const result = ngoOptions.filter(ngo =>
                 selectedLabels.includes(ngo.name.trim())
             );
-
             selectedNGOs = result
         }
     });
-
           
     quickPick.show();
                 
@@ -41,7 +36,9 @@ export function hideNGOs(pcm: PCM, langConfig: LanguageClientConfigSingleton) {
             ocNames: hideTheseOrderCoordinates.map(o => (o as OrderCoordinate).name),
             children: hideTheseChildren.map(n => n.name)
         };    
-        langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
+        
+        // TODO: Route to D3 Manager
+        console.log("D3 Action Triggered: ", action);
         quickPick.dispose();
     });
 }

@@ -3,7 +3,6 @@ import { NL_STATEMENT, OrderCoordinate, PCM } from '../../../language/generated/
 import { LanguageClientConfigSingleton } from '../../langclientconfig.js';
 import { AstUtils } from 'langium';
 
-
 export function mouseWheelHide(pcm: PCM, langConfig: LanguageClientConfigSingleton, state: number) {
     const pcmNars = AstUtils.streamAllContents(pcm).toArray()
                                     .filter(c => c.$type === 'NL_STATEMENT')
@@ -16,7 +15,7 @@ export function mouseWheelHide(pcm: PCM, langConfig: LanguageClientConfigSinglet
                 ocChildren: [],
                 standaloneNars: pcmNars
             }
-            langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
+            console.log("D3 Action Triggered: ", action); 
             break;
         }
         case 2 : {
@@ -33,7 +32,7 @@ export function mouseWheelHide(pcm: PCM, langConfig: LanguageClientConfigSinglet
                 ocChildren: neutralOCChildren,
                 standaloneNars: pcmNars
             }
-            langConfig.webviewProvider?.findActiveWebview()?.sendAction(action); 
+            console.log("D3 Action Triggered: ", action); 
             break;
         }
         case 7 : {
@@ -43,7 +42,7 @@ export function mouseWheelHide(pcm: PCM, langConfig: LanguageClientConfigSinglet
                 ocChildren: [],
                 standaloneNars: pcmNars
             }
-            langConfig.webviewProvider?.findActiveWebview()?.sendAction(action);  
+            console.log("D3 Action Triggered: ", action);  
             break;
         }
         default: {
@@ -53,8 +52,8 @@ export function mouseWheelHide(pcm: PCM, langConfig: LanguageClientConfigSinglet
                 ocChildren: [],
                 standaloneNars: []
             }
-            langConfig.webviewProvider?.findActiveWebview()?.sendAction(action); 
+            console.log("D3 Action Triggered: ", action); 
+            break;
         }
     }
-
 }
