@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClientConfigSingleton } from './langclientconfig.js';
-// import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
+import { toggleDiagramLayout } from './src/commands/toggle-diagram-layout-command.js';
 
 
 // This function is called when the extension is activated.
