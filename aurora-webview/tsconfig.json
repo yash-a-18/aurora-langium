@@ -1,0 +1,23 @@
+{
+	"extends": "../configs/base.tsconfig.json",
+	"compilerOptions": {
+    "jsx": "react",
+    "rootDir": "../",
+    "outDir": "../dist/cjs/aurora-webview/src",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "ESNext", "DOM"
+    ],
+    "declaration": true,
+  },
+  "include": [
+    "src",
+    "../../shared"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

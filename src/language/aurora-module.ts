@@ -2,7 +2,6 @@ import { type Module, inject } from 'langium';
 import {
     createDefaultModule,
     createDefaultSharedModule,
-    LangiumSharedServices,
     type DefaultSharedModuleContext,
     type LangiumServices,
     type PartialLangiumServices
@@ -10,8 +9,26 @@ import {
 import { AuroraGeneratedModule, AuroraGeneratedSharedModule } from './generated/module.js';
 import { AuroraValidator, registerValidationChecks } from './aurora-validator.js';
 import { AuroraScopeComputation, AuroraScopeProvider } from './aurora-scope.js';
+import { AuroraDiagramGenerator } from './aurora-diagram-generator.js';
+import {
+    type LangiumSprottyServices,
+    type LangiumSprottySharedServices,
+    type SprottyDiagramServices,
+    SprottyDefaultModule,
+    SprottySharedModule
+} from 'langium-sprotty';
+import {
+    DefaultElementFilter,
+    type ElkFactory,
+    ElkLayoutEngine,
+    type IElementFilter,
+    type ILayoutConfigurator
+} from 'sprotty-elk';
+import ElkConstructor from 'elkjs/lib/elk.bundled.js';
 import { AuroraHoverProvider } from './hover-provider.js';
+// import { AuroraSemanticTokenProvider } from './semantic-token-provider.js';
 import { AuroraCommandHandler } from './aurora-commands.js';
+import { AuroraLayoutConfigurator } from '../../shared/utils.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -19,6 +36,11 @@ import { AuroraCommandHandler } from './aurora-commands.js';
 export type AuroraAddedServices = {
     validation: {
         AuroraValidator: AuroraValidator
+    },
+    layout: {
+        ElkFactory: ElkFactory,
+        ElementFilter: IElementFilter,
+        LayoutConfigurator: ILayoutConfigurator
     }
 }
 
@@ -26,21 +48,33 @@ export type AuroraAddedServices = {
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type AuroraServices = LangiumServices & AuroraAddedServices;
+export type AuroraServices = LangiumSprottyServices & LangiumServices & AuroraAddedServices;
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
-export const AuroraModule: Module<AuroraServices, PartialLangiumServices & AuroraAddedServices> = {
-
+export const AuroraModule: Module<AuroraServices, PartialLangiumServices & SprottyDiagramServices & AuroraAddedServices> = {
+    diagram: {
+        DiagramGenerator: services => new AuroraDiagramGenerator(services),
+        ModelLayoutEngine: services => new ElkLayoutEngine(
+            services.layout.ElkFactory,
+            services.layout.ElementFilter,
+            services.layout.LayoutConfigurator
+        ) as any
+    },
     validation: {
         AuroraValidator: () => new AuroraValidator()
     },
     references: {
         ScopeComputation: services => new AuroraScopeComputation(services),
         ScopeProvider: services => new AuroraScopeProvider(services)
+    },
+    layout: {
+        ElkFactory: () => () => new ElkConstructor.default({ algorithms: ['layered', 'stress', 'mrtree', 'radial', 'force', 'disco'] }),
+        ElementFilter: () => new DefaultElementFilter(),
+        LayoutConfigurator: () => new AuroraLayoutConfigurator()
     },
     lsp: {
         // SemanticTokenProvider: (services) => new AuroraSemanticTokenProvider(services),
@@ -64,16 +98,18 @@ export const AuroraModule: Module<AuroraServices, PartialLangiumServices & Auror
  * @returns An object wrapping the shared services and the language-specific services
  */
 export function createAuroraServices(context: DefaultSharedModuleContext): {
-    shared: LangiumSharedServices,
+    shared: LangiumSprottySharedServices,
     Aurora: AuroraServices
 } {
     const shared = inject(
         createDefaultSharedModule(context),
-        AuroraGeneratedSharedModule
+        AuroraGeneratedSharedModule,
+        SprottySharedModule
     );
 
     const Aurora = inject(
         createDefaultModule({ shared }),
+        SprottyDefaultModule,
         AuroraGeneratedModule,
         AuroraModule
     );

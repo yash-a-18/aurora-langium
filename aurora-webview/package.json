@@ -1,0 +1,39 @@
+{
+    "name": "aurora-sprotty-webview",
+    "version": "0.0.1",
+    "description": "Example of a Sprotty diagram in a VS Code extensions (WebView part)",
+    "private": true,
+    "type": "commonjs",
+    "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+    "keywords": [
+      "vscode",
+      "graph",
+      "diagram",
+      "layout",
+      "sprotty"
+    ],
+    "files": [
+      "lib",
+      "src",
+      "css"
+    ],
+    "dependencies": {
+      "reflect-metadata": "^0.1.13",
+      "sprotty": "^1.4.0",
+      "sprotty-vscode-webview": "^1.0.0"
+    },
+    "devDependencies": {
+      "css-loader": "^7.1.2",
+      "file-loader": "^6.2.0",
+      "source-map-loader": "^5.0.0",
+      "style-loader": "^4.0.0",
+      "ts-loader": "^9.5.2",
+      "typescript": "~5.1.6",
+      "webpack": "^5.98.0",
+      "webpack-cli": "^6.0.1"
+    },
+    "scripts": {
+      "build": "webpack --mode=development",
+      "watch": "webpack --mode=development --watch"
+    }
+  }

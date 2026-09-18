@@ -18,7 +18,17 @@ export function activate(context: vscode.ExtensionContext): void {
     const langConfig = LanguageClientConfigSingleton.getInstance();
     langConfig.setServerModule(context.asAbsolutePath(path.join('dist', 'cjs/language', 'main.cjs'))); // Set serverModule
     langConfig.initialize(context);
+    langConfig.registerWebviewViewProvider()
 
+    vscode.workspace.onDidSaveTextDocument((d) => {
+        langConfig.webviewProvider?.openDiagram(d.uri, { reveal: true }).then((o : any) =>{
+                vscode.window.showTextDocument(d.uri, { preview: false });
+            })
+
+    })
+        context.subscriptions.push(
+            vscode.commands.registerCommand('aurora.diagram.toggleLayout', () => toggleDiagramLayout(langConfig))
+        );
         
 }
 
