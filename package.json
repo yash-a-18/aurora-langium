@@ -80,10 +80,6 @@
         "chalk": "~5.3.0",
         "commander": "~11.0.0",
         "langium": "4.1.0",
-        "langium-sprotty": "4.1.0",
-        "sprotty-elk": "^1.4.0",
-        "sprotty-vscode": "^1.0.0",
-        "sprotty-vscode-webview": "^1.0.0",
         "typir": "^0.3.3",
         "typir-langium": "^0.3.3",
         "vscode-languageclient": "~9.0.1",
@@ -100,11 +96,6 @@
         "langium-cli": "4.1.0",
         "typescript": "~5.1.6",
         "vitest": "~1.4.0"
-    },
-    "overrides": {
-        "langium-sprotty": {
-            "langium": "4.1.0"
-        }
     },
     "volta": {
         "node": "18.19.1",
